@@ -28,11 +28,70 @@ function App() {
     "Skye": "Australian",
     "Harbor": "India",
     "Fade": "Turkey",
-    "Gekko": "🇲🇽",
+    "Gekko": "Usa",
     "Chamber": "French",
     "Neon": "Phillipines",
     "Deadlock": "Norway",
-    "Vyse": "South Korea"
+    "Vyse": "South Korea",
+    "Iso": "Chinese",
+    "Clove": "Scotland",
+    "Reyna": "Mexican"
+  };
+
+  const gender = {
+    "Brimstone": "Man",
+    "Viper": "Women",
+    "Omen": "Man",
+    "Cypher": "Man",
+    "Sova": "Man",
+    "Jett": "Women",
+    "Phoenix": "Man",
+    "Sage": "Women",
+    "Raze": "Women",
+    "Killjoy": "Women",
+    "Breach": "Man",
+    "Yoru": "Man",
+    "Astra": "Women",
+    "KAY/O": "Man",
+    "Skye": "Women",
+    "Harbor": "Man",
+    "Fade": "Women",
+    "Gekko": "Man",
+    "Chamber": "Man",
+    "Neon": "Women",
+    "Deadlock": "Women",
+    "Vyse": "Women",
+    "Iso": "Man",
+    "Clove": "Non-Binary",
+    "Reyna": "Women"
+  };
+
+  const skill = {
+    "Brimstone": ["Molotov"],
+    "Viper": ["Molotov"],
+    "Omen": ["Bang"],
+    "Cypher": ["Trap"],
+    "Sova": ["Damage"],
+    "Jett": ["None"],
+    "Phoenix": ["Molotov", "Bang"],
+    "Sage": ["None"],
+    "Raze": ["Molotov"],
+    "Killjoy": ["Molotov" , "Trap"],
+    "Breach": ["Concussion" , "Molotov", "Bang"],
+    "Yoru": ["None"],
+    "Astra": ["Concussion"],
+    "KAY/O": ["Molotov", "Bang"],
+    "Skye": ["Bang", "Concussion"],
+    "Harbor": ["None"],
+    "Fade": ["Concussion"],
+    "Gekko": ["Bang", "Molotov", "Concussion"],
+    "Chamber": ["Trap"],
+    "Neon": ["Concussion"],
+    "Deadlock": ["Concussion", "Trap"],
+    "Vyse": ["Bang", "Supressão"],
+    "Iso": ["None"],
+    "Clove": ["Supressão"],
+    "Reyna": ["Bang"]
   };
 
   useEffect(() => {
@@ -40,10 +99,13 @@ function App() {
       try {
         const response = await fetch('https://valorant-api.com/v1/agents?isPlayableCharacter=true');
         const data = await response.json();
+        console.log(data);
         const agentsData = data.data.map(agent => ({
           name: agent.displayName,
           role: agent.role?.displayName,
           imageUrl: agent.displayIcon,
+          gender: gender[agent.displayName],
+          skill: skill[agent.displayName],
           nationality: nationalities[agent.displayName] || 'Unknown',
           abilities: agent.abilities.slice(0, 4).map(ability => ({
             name: ability.displayName,
@@ -63,13 +125,32 @@ function App() {
 
   const handleSearch = (agentName) => {
     const foundAgent = agents.find(agent => agent.name.toLowerCase() === agentName.toLowerCase());
+    let contador = 0
     if (foundAgent) {
+      console.log(randomAgent)
+      console.log(foundAgent)
+        const commomSkills = () => {
+          if(foundAgent.skill.length > 1)
+            {
+              let maxSkills = randomAgent.skill.length-1
+              foundAgent.skill.map(sk => {
+                
+              })
+            }
+          
+        }
+
+
+        commomSkills()
+
       const newGuess = {
         name: foundAgent.name,
         role: foundAgent.role,
         imageUrl: foundAgent.imageUrl,
         nationality: foundAgent.nationality,
         abilities: foundAgent.abilities,
+        gender: foundAgent.gender,
+        skill: skill[foundAgent.name],
         correct: {
           name: foundAgent.name === randomAgent.name,
           role: foundAgent.role === randomAgent.role,
@@ -77,7 +158,9 @@ function App() {
           nationality: foundAgent.nationality === randomAgent.nationality,
           abilities: foundAgent.abilities.every((ability, index) =>
             ability.imageUrl === randomAgent.abilities[index].imageUrl
-          )
+          ),
+          gender: foundAgent.gender === randomAgent.gender,
+          skill: skill[foundAgent.name] === randomAgent.skill,
         }
       };
 
@@ -87,7 +170,7 @@ function App() {
       if (newGuess.correct.name) {
         setTimeout(() => {
           setShowMenu(true);
-        }, 3000);
+        }, 1000);
       }
     }
   };

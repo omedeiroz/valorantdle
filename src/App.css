@@ -82,8 +82,8 @@
 }
 
 .guess-box {
-  width: 100px;
-  height: 100px;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -94,6 +94,10 @@
 
 .correct {
   background-color: #00FF00;
+}
+
+.half-correct {
+  background-color: #ff9100;
 }
 
 .incorrect {
@@ -157,6 +161,7 @@
 .agent-card {
   display: flex;
   flex-direction: row; 
+  text-align: center;
   align-items: center; 
   justify-content: space-around; 
   flex-wrap: wrap; 
@@ -201,4 +206,17 @@
   height: 40px;
   margin: 2px;
   border-radius: 5px;
+}
+
+#agent{
+  border: solid 2px black;
+}
+
+.column{
+  display: flex;
+  flex-direction: column;
+}
+
+.row{
+  flex-direction: row;
 }
