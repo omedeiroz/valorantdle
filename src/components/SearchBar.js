@@ -1,20 +1,24 @@
 import React, { useState } from 'react';
 
-function SearchBar({ agents, onSearch }) {
+
+function SearchBar({ agents, onSearch, guesses }) {
   const [inputValue, setInputValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
-  const [firstSuggestion, setFirstSuggestion] = useState(''); 
+  const [firstSuggestion, setFirstSuggestion] = useState('');
+
+  const guessedAgents = guesses.map(guess => guess.name.toLowerCase());
 
   const handleInputChange = (event) => {
     const value = event.target.value;
     setInputValue(value);
-    
+
     if (value.length > 0) {
-      const filteredAgents = agents.filter(agent => 
-        agent.name.toLowerCase().startsWith(value.toLowerCase())
+      const filteredAgents = agents.filter(agent =>
+        agent.name.toLowerCase().startsWith(value.toLowerCase()) &&
+        !guessedAgents.includes(agent.name.toLowerCase())
       );
       setSuggestions(filteredAgents);
-      setFirstSuggestion(filteredAgents[0]?.name || ''); 
+      setFirstSuggestion(filteredAgents[0]?.name || '');
     } else {
       setSuggestions([]);
       setFirstSuggestion('');
@@ -22,7 +26,7 @@ function SearchBar({ agents, onSearch }) {
   };
 
   const handleSuggestionClick = (agentName) => {
-    setInputValue(agentName);
+    setInputValue('');
     setSuggestions([]);
     onSearch(agentName);
   };
@@ -33,7 +37,7 @@ function SearchBar({ agents, onSearch }) {
         setInputValue('');
         onSearch(firstSuggestion);
         setSuggestions([]);
-        setFirstSuggestion(''); 
+        setFirstSuggestion('');
       }
     }
   };

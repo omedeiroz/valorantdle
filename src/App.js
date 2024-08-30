@@ -1,33 +1,38 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SearchBar from './components/SearchBar';
 import GuessResult from './components/GuessResult';
-import './App.css';
+import Menu from './components/Menu';
+import "./App.css";
 
 function App() {
   const [agents, setAgents] = useState([]);
   const [randomAgent, setRandomAgent] = useState(null);
   const [guesses, setGuesses] = useState([]);
   const [showMenu, setShowMenu] = useState(false);
-
+  
   const nationalities = {
-    "Brimstone": "🇺🇸",
-    "Viper": "🇺🇸",
-    "Omen": "Sombras",
-    "Cypher": "🇲🇦",
-    "Sova": "🇷🇺",
-    "Jett": "🇰🇷",
-    "Phoenix": "🇬🇧",
-    "Sage": "🇨🇳",
-    "Raze": "🇧🇷",
-    "Killjoy": "🇩🇪",
-    "Breach": "🇸🇪",
-    "Yoru": "🇯🇵",
-    "Astra": "🇳🇬",
-    "KAY/O": "🇺🇸",
-    "Skye": "🇦🇺",
-    "Harbor": "🇮🇳",
-    "Fade": "🇹🇷",
-    "Gekko": "🇲🇽"
+    "Brimstone": "Usa",
+    "Viper": "Usa",
+    "Omen": "Shadow",
+    "Cypher": "Morroco",
+    "Sova": "Russia",
+    "Jett": "South Korea",
+    "Phoenix": "United Kingdom",
+    "Sage": "Chinese",
+    "Raze": "Brazil",
+    "Killjoy": "Germany",
+    "Breach": "Sweden",
+    "Yoru": "Japan",
+    "Astra": "Ghana",
+    "KAY/O": "Robot",
+    "Skye": "Australian",
+    "Harbor": "India",
+    "Fade": "Turkey",
+    "Gekko": "🇲🇽",
+    "Chamber": "French",
+    "Neon": "Phillipines",
+    "Deadlock": "Norway",
+    "Vyse": "South Korea"
   };
 
   useEffect(() => {
@@ -75,7 +80,9 @@ function App() {
           )
         }
       };
-      setGuesses(prevGuesses => [newGuess, ...prevGuesses]); // Adiciona o novo palpite no início
+
+      setGuesses(prevGuesses => [newGuess, ...prevGuesses]);
+      
 
       if (newGuess.correct.name) {
         setTimeout(() => {
@@ -94,17 +101,11 @@ function App() {
 
   return (
     <div className="app">
-      <SearchBar agents={agents} onSearch={handleSearch} />
+      <SearchBar agents={agents} onSearch={handleSearch} guesses={guesses}/>
       {guesses.map((guess, index) => (
         <GuessResult key={index} guess={guess} />
       ))}
-
-      {showMenu && (
-        <div className="menu">
-          <p>Parabéns! Você acertou o agente!</p>
-          <button onClick={handleRestart}>Reiniciar</button>
-        </div>
-      )}
+      {showMenu && <Menu onRestart={handleRestart} />}
     </div>
   );
 }
