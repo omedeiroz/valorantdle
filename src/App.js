@@ -9,7 +9,9 @@ function App() {
   const [randomAgent, setRandomAgent] = useState(null);
   const [guesses, setGuesses] = useState([]);
   const [showMenu, setShowMenu] = useState(false);
+  const [color, setColor] = useState('');
   
+
   const nationalities = {
     "Brimstone": "Usa",
     "Viper": "Usa",
@@ -88,9 +90,9 @@ function App() {
     "Chamber": ["Trap"],
     "Neon": ["Concussion"],
     "Deadlock": ["Concussion", "Trap"],
-    "Vyse": ["Bang", "Supressão"],
+    "Vyse": ["Bang", "Suppression"],
     "Iso": ["None"],
-    "Clove": ["Supressão"],
+    "Clove": ["Suppression"],
     "Reyna": ["Bang"]
   };
 
@@ -99,7 +101,6 @@ function App() {
       try {
         const response = await fetch('https://valorant-api.com/v1/agents?isPlayableCharacter=true');
         const data = await response.json();
-        console.log(data);
         const agentsData = data.data.map(agent => ({
           name: agent.displayName,
           role: agent.role?.displayName,
@@ -107,10 +108,6 @@ function App() {
           gender: gender[agent.displayName],
           skill: skill[agent.displayName],
           nationality: nationalities[agent.displayName] || 'Unknown',
-          abilities: agent.abilities.slice(0, 4).map(ability => ({
-            name: ability.displayName,
-            imageUrl: ability.displayIcon
-          })),
         }));
         setAgents(agentsData);
         const randomIndex = Math.floor(Math.random() * agentsData.length);
@@ -127,28 +124,29 @@ function App() {
     const foundAgent = agents.find(agent => agent.name.toLowerCase() === agentName.toLowerCase());
     let contador = 0
     if (foundAgent) {
-      console.log(randomAgent)
-      console.log(foundAgent)
-        const commomSkills = () => {
-          if(foundAgent.skill.length > 1)
-            {
-              let maxSkills = randomAgent.skill.length-1
-              foundAgent.skill.map(sk => {
-                
-              })
-            }
-          
-        }
-
-
-        commomSkills()
+      const commomSkills = () => {
+        let maxSkills = randomAgent.skill.length;
+        let max = foundAgent.skill.length
+        let contador = 0;
+        foundAgent.skill.forEach(sk => {
+          if (randomAgent.skill.includes(sk)) contador++;
+        });        
+      
+        if (contador === maxSkills && maxSkills === max) return 'correct';
+        if (contador > 0 && contador < maxSkills) return 'half-correct';
+        if (contador === 0) return 'incorrect';
+        
+        return '';
+      };
+      
+      setColor(commomSkills());
+        
 
       const newGuess = {
         name: foundAgent.name,
         role: foundAgent.role,
         imageUrl: foundAgent.imageUrl,
         nationality: foundAgent.nationality,
-        abilities: foundAgent.abilities,
         gender: foundAgent.gender,
         skill: skill[foundAgent.name],
         correct: {
@@ -156,16 +154,12 @@ function App() {
           role: foundAgent.role === randomAgent.role,
           imageUrl: foundAgent.imageUrl === randomAgent.imageUrl,
           nationality: foundAgent.nationality === randomAgent.nationality,
-          abilities: foundAgent.abilities.every((ability, index) =>
-            ability.imageUrl === randomAgent.abilities[index].imageUrl
-          ),
           gender: foundAgent.gender === randomAgent.gender,
           skill: skill[foundAgent.name] === randomAgent.skill,
         }
       };
 
       setGuesses(prevGuesses => [newGuess, ...prevGuesses]);
-      
 
       if (newGuess.correct.name) {
         setTimeout(() => {
@@ -186,7 +180,7 @@ function App() {
     <div className="app">
       <SearchBar agents={agents} onSearch={handleSearch} guesses={guesses}/>
       {guesses.map((guess, index) => (
-        <GuessResult key={index} guess={guess} />
+        <GuessResult key={index} guess={guess} color={color} />
       ))}
       {showMenu && <Menu onRestart={handleRestart} />}
     </div>

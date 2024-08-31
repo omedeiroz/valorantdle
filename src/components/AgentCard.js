@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-function AgentCard({ guess }) {
+function AgentCard({ guess, color }) {  
   return (
     <div className="agent-card">
       <div className={`guess-box ${guess.correct.imageUrl ? 'correct' : 'incorrect'} `}>
@@ -16,18 +16,11 @@ function AgentCard({ guess }) {
       <div className={`guess-box ${guess.correct.role ? 'correct' : 'incorrect'}`}>
         {guess.role}
       </div>
-      <div className={`guess-box ${guess.skill.length > 1 ? 'column' : 'row'}`}>
+      <div className={`guess-box skill-box ${guess.skill.length > 1 ? 'column' : 'row'} ${color}`}>
         {guess.skill}
       </div>
       <div className={`guess-box ${guess.correct.nationality ? 'correct' : 'incorrect'} nacionality`}>
         {guess.nationality}
-      </div>
-      <div className={`guess-box ${guess.correct.abilities ? 'correct' : 'incorrect'}`}>
-        <div className="ability-container">
-          {guess.abilities.map((ability, index) => (
-            <img key={index} src={ability.imageUrl} alt={ability.name} className="ability-icon" />
-          ))}
-        </div>
       </div>
     </div>
   );
