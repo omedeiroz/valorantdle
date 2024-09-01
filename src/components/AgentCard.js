@@ -16,8 +16,12 @@ function AgentCard({ guess, color }) {
       <div className={`guess-box ${guess.correct.role ? 'correct' : 'incorrect'}`}>
         {guess.role}
       </div>
-      <div className={`guess-box skill-box ${guess.skill.length > 1 ? 'column' : 'row'} ${color}`}>
-        {guess.skill}
+      <div className={`guess-box skill-box ${color}`}>
+        <div className="skill-container">
+          {guess.skill.map((skill, index) => (
+            <div key={index} className="skill-item">{skill}</div>
+          ))}
+        </div>
       </div>
       <div className={`guess-box ${guess.correct.nationality ? 'correct' : 'incorrect'} nacionality`}>
         {guess.nationality}

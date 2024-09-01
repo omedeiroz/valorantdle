@@ -10,7 +10,6 @@ function App() {
   const [guesses, setGuesses] = useState([]);
   const [showMenu, setShowMenu] = useState(false);
   const [color, setColor] = useState('');
-  
 
   const nationalities = {
     "Brimstone": "Usa",
@@ -121,6 +120,7 @@ function App() {
   }, []);
 
   const handleSearch = (agentName) => {
+    console.log(randomAgent);
     const foundAgent = agents.find(agent => agent.name.toLowerCase() === agentName.toLowerCase());
     let contador = 0
     if (foundAgent) {
@@ -132,15 +132,18 @@ function App() {
           if (randomAgent.skill.includes(sk)) contador++;
         });        
       
+        console.log(contador);
+        
+
         if (contador === maxSkills && maxSkills === max) return 'correct';
-        if (contador > 0 && contador < maxSkills) return 'half-correct';
+        if (contador > 0 ) return 'half-correct';
         if (contador === 0) return 'incorrect';
         
         return '';
       };
       
-      setColor(commomSkills());
-        
+      const color = commomSkills()
+      console.log(color);
 
       const newGuess = {
         name: foundAgent.name,
@@ -149,6 +152,7 @@ function App() {
         nationality: foundAgent.nationality,
         gender: foundAgent.gender,
         skill: skill[foundAgent.name],
+        color: color,
         correct: {
           name: foundAgent.name === randomAgent.name,
           role: foundAgent.role === randomAgent.role,
@@ -180,7 +184,7 @@ function App() {
     <div className="app">
       <SearchBar agents={agents} onSearch={handleSearch} guesses={guesses}/>
       {guesses.map((guess, index) => (
-        <GuessResult key={index} guess={guess} color={color} />
+        <GuessResult key={index} guess={guess}/>
       ))}
       {showMenu && <Menu onRestart={handleRestart} />}
     </div>

@@ -2,10 +2,10 @@ import React from 'react';
 import AgentCard from './AgentCard';
 
 
-function GuessResult({ guess, color }) { 
+function GuessResult({ guess }) { 
   return (
     <div className="guess-result">
-      <AgentCard guess={guess} color={color}/>
+      <AgentCard guess={guess} color={guess.color}/>
     </div>
   );
 }
