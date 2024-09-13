@@ -9,7 +9,7 @@ function App() {
   const [randomAgent, setRandomAgent] = useState(null);
   const [guesses, setGuesses] = useState([]);
   const [showMenu, setShowMenu] = useState(false);
-  const [color, setColor] = useState('');
+  const [isFinished, setIsFinished] = useState(false)
 
   const nationalities = {
     "Brimstone": "Usa",
@@ -96,31 +96,34 @@ function App() {
   };
 
   useEffect(() => {
-    const fetchAgents = async () => {
-      try {
-        const response = await fetch('https://valorant-api.com/v1/agents?isPlayableCharacter=true');
-        const data = await response.json();
-        const agentsData = data.data.map(agent => ({
-          name: agent.displayName,
-          role: agent.role?.displayName,
-          imageUrl: agent.displayIcon,
-          gender: gender[agent.displayName],
-          skill: skill[agent.displayName],
-          nationality: nationalities[agent.displayName] || 'Unknown',
-        }));
-        setAgents(agentsData);
-        const randomIndex = Math.floor(Math.random() * agentsData.length);
-        setRandomAgent(agentsData[randomIndex]);
-      } catch (error) {
-        console.error('Erro ao buscar os agentes:', error);
-      }
-    };
 
+    if(!isFinished){
+      const fetchAgents = async () => {
+        try {
+          const response = await fetch('https://valorant-api.com/v1/agents?isPlayableCharacter=true');
+          const data = await response.json();
+          const agentsData = data.data.map(agent => ({
+            name: agent.displayName,
+            role: agent.role?.displayName,
+            imageUrl: agent.displayIcon,
+            gender: gender[agent.displayName],
+            skill: skill[agent.displayName],
+            nationality: nationalities[agent.displayName] || 'Unknown',
+          }));
+          setAgents(agentsData);
+          const randomIndex = Math.floor(Math.random() * agentsData.length);
+          setRandomAgent(agentsData[randomIndex]);
+        } catch (error) {
+          console.error('Erro ao buscar os agentes:', error);
+        }
+        
+    }
     fetchAgents();
+  }
+
   }, []);
 
   const handleSearch = (agentName) => {
-    console.log(randomAgent);
     const foundAgent = agents.find(agent => agent.name.toLowerCase() === agentName.toLowerCase());
     let contador = 0
     if (foundAgent) {
@@ -132,7 +135,6 @@ function App() {
           if (randomAgent.skill.includes(sk)) contador++;
         });        
       
-        console.log(contador);
         
 
         if (contador === maxSkills && maxSkills === max) return 'correct';
@@ -143,7 +145,6 @@ function App() {
       };
       
       const color = commomSkills()
-      console.log(color);
 
       const newGuess = {
         name: foundAgent.name,
@@ -166,6 +167,7 @@ function App() {
       setGuesses(prevGuesses => [newGuess, ...prevGuesses]);
 
       if (newGuess.correct.name) {
+        setIsFinished(true)
         setTimeout(() => {
           setShowMenu(true);
         }, 1000);
@@ -174,6 +176,7 @@ function App() {
   };
 
   const handleRestart = () => {
+    setIsFinished(false)
     const randomIndex = Math.floor(Math.random() * agents.length);
     setRandomAgent(agents[randomIndex]);
     setGuesses([]);
@@ -182,7 +185,7 @@ function App() {
 
   return (
     <div className="app">
-      <SearchBar agents={agents} onSearch={handleSearch} guesses={guesses}/>
+      <SearchBar agents={agents} onSearch={handleSearch} guesses={guesses} isFinished={isFinished}/>
       {guesses.map((guess, index) => (
         <GuessResult key={index} guess={guess}/>
       ))}
