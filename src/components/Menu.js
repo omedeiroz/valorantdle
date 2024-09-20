@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 function Menu({ onRestart }) {
   return (
     <div className="menu">

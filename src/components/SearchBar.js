@@ -1,37 +1,30 @@
 import React, { useState } from 'react';
 
-
-function SearchBar({ agents, onSearch, guesses, isFinished }) {
+function SearchBar({ onSearch, guesses, isFinished, agents }) {
   const [inputValue, setInputValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
-  const [firstSuggestion, setFirstSuggestion] = useState('');
 
   const guessedAgents = guesses.map(guess => guess.name.toLowerCase());
 
-  
-    const handleInputChange = (event) => {
-      console.log(isFinished);
-      if(!isFinished){
+  const handleInputChange = (event) => {
+    if (!isFinished) {
       const value = event.target.value;
       setInputValue(value);
-  
+
       if (value.length > 0) {
         const filteredAgents = agents.filter(agent =>
           agent.name.toLowerCase().startsWith(value.toLowerCase()) &&
           !guessedAgents.includes(agent.name.toLowerCase())
         );
         setSuggestions(filteredAgents);
-        setFirstSuggestion(filteredAgents[0]?.name || '');
       } else {
         setSuggestions([]);
-        setFirstSuggestion('');
       }
-  }
-}
-  ;
+    }
+  };
 
   const handleSuggestionClick = (agentName) => {
-    if(!isFinished){
+    if (!isFinished) {
       setInputValue('');
       setSuggestions([]);
       onSearch(agentName);
@@ -39,25 +32,19 @@ function SearchBar({ agents, onSearch, guesses, isFinished }) {
   };
 
   const handleKeyDown = (event) => {
-    if(!isFinished){
-    if (event.key === 'Enter') {
-      if (firstSuggestion) {
-        setInputValue('');
-        onSearch(firstSuggestion);
-        setSuggestions([]);
-        setFirstSuggestion('');
-      }
+    if (event.key === 'Enter' && suggestions.length > 0) {
+      const firstSuggestion = suggestions[0];
+      handleSuggestionClick(firstSuggestion.name);
     }
-  }
-}
+  };
 
   return (
     <div className="search-bar">
       <input
         type="text"
         value={inputValue}
-        onChange={handleInputChange}
         onKeyDown={handleKeyDown}
+        onChange={handleInputChange}
         placeholder="Digite o nome do agente"
       />
       <button onClick={() => onSearch(inputValue)}>Buscar</button>
