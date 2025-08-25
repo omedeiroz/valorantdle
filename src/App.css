@@ -57,6 +57,30 @@
   text-align: center;
   margin-bottom: 30px;
   position: relative;
+  padding: 20px;
+  background: rgba(26, 31, 37, 0.6);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 70, 85, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.header-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-content h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: bold;
+  background: linear-gradient(45deg, #FF4655, #FF6B7A);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: 1px;
 }
 
 .game-header::before {
@@ -405,7 +429,64 @@
 }
 
 .menu-content {
+  background: rgba(26, 31, 37, 0.95);
+  border-radius: 20px;
+  padding: 40px;
   text-align: center;
+  border: 2px solid rgba(255, 70, 85, 0.3);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
+  max-width: 500px;
+  width: 90%;
+}
+
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+.restart-button, .switch-mode-button {
+  padding: 15px 30px;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 50px;
+}
+
+.restart-button {
+  background: linear-gradient(45deg, #FF4655, #FF6B7A);
+  color: white;
+}
+
+.switch-mode-button {
+  background: rgba(255, 70, 85, 0.1);
+  color: #FF4655;
+  border: 2px solid rgba(255, 70, 85, 0.3);
+}
+
+.restart-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 70, 85, 0.4);
+}
+
+.switch-mode-button:hover {
+  background: rgba(255, 70, 85, 0.2);
+  border-color: rgba(255, 70, 85, 0.6);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 70, 85, 0.2);
+}
+
+.restart-icon, .switch-icon {
+  font-size: 18px;
 }
 
 .success-icon {
@@ -588,3 +669,215 @@
     padding: 5px 10px;
   }
 }
+
+.back-button {
+  position: relative;
+  margin-bottom: 20px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 25px;
+  background: rgba(255, 70, 85, 0.1);
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 70, 85, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.back-button:hover {
+  background: rgba(255, 70, 85, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 70, 85, 0.3);
+}
+
+.mode-selector {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.mode-selector h2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 40px;
+  background: linear-gradient(45deg, #FF4655, #FF6B7A);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.mode-buttons {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.mode-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 30px;
+  border: 2px solid rgba(255, 70, 85, 0.3);
+  border-radius: 20px;
+  background: rgba(26, 31, 37, 0.8);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 300px;
+  text-align: center;
+}
+
+.mode-button:hover {
+  border-color: rgba(255, 70, 85, 0.6);
+  background: rgba(26, 31, 37, 0.9);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(255, 70, 85, 0.2);
+}
+
+.mode-button.active {
+  border-color: #FF4655;
+  background: rgba(255, 70, 85, 0.1);
+}
+
+.mode-icon {
+  font-size: 4rem;
+}
+
+.mode-content h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #FF4655;
+  margin-bottom: 10px;
+}
+
+.mode-content p {
+  color: #B8B8B8;
+  font-size: 1rem;
+}
+
+.ability-display {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.ability-card {
+  background: rgba(26, 31, 37, 0.9);
+  border-radius: 20px;
+  padding: 30px;
+  border: 2px solid rgba(255, 70, 85, 0.2);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  text-align: center;
+  max-width: 500px;
+}
+
+.ability-image-container {
+  position: relative;
+  margin-bottom: 20px;
+  cursor: pointer;
+  perspective: 1000px;
+}
+
+.ability-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 15px;
+  border: 3px solid #FF4655;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: blur(0px);
+  transform: rotate(0deg) scale(1);
+  opacity: 1;
+  box-shadow: 0 0 20px rgba(255, 70, 85, 0.3);
+}
+
+.ability-image.flipped {
+  transform: rotate(180deg) scale(0.9);
+  filter: blur(6px);
+  opacity: 0.7;
+  box-shadow: 0 0 30px rgba(255, 70, 85, 0.2);
+}
+
+.ability-image-container:hover .ability-image:not(.flipped) {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(255, 70, 85, 0.5);
+}
+
+.flip-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  text-align: center;
+  padding: 10px;
+  backdrop-filter: blur(2px);
+  border: 2px solid rgba(255, 70, 85, 0.5);
+  transition: all 0.3s ease;
+  animation: pulse 2s infinite;
+}
+
+.flip-overlay:hover {
+  background: rgba(0, 0, 0, 0.95);
+  border-color: rgba(255, 70, 85, 0.8);
+  transform: scale(1.05);
+  animation: none;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 70, 85, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 70, 85, 0.6);
+  }
+}
+
+.ability-info h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #FF4655;
+  margin-bottom: 15px;
+}
+
+.ability-description {
+  color: #B8B8B8;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.hint-counter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px;
+  background: rgba(255, 70, 85, 0.1);
+  border-radius: 15px;
+  border: 1px solid rgba(255, 70, 85, 0.3);
+  color: #FF4655;
+  font-weight: 600;
+  font-size: 14px;
+  margin-top: 15px;
+}
+
+.hint-counter .hint-icon {
+  font-size: 16px;
+  animation: pulse 2s infinite;
+}
+

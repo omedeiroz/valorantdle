@@ -81,7 +81,12 @@ const AgentProvider = ({ children }) => {
           releaseYear: getReleaseYear(agent.displayName),
           nationality: agent.characterTags?.find(tag => tag.includes('Nationality'))?.replace('Nationality-', '') || 'Desconhecida',
           description: agent.description,
-          abilities: agent.abilities || [],
+          abilities: agent.abilities?.map(ability => ({
+            name: ability.displayName,
+            description: ability.description,
+            imageUrl: ability.displayIcon,
+            slot: ability.slot
+          })) || [],
           background: agent.background,
           characterTags: agent.characterTags || []
         }));

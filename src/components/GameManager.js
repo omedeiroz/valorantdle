@@ -3,9 +3,12 @@ import { AgentContext } from './AgentProvider';
 import SearchBar from './SearchBar';
 import GuessResult from './GuessResult';
 import Menu from './Menu';
+import GameModeSelector from './GameModeSelector';
+import AbilityGame from './AbilityGame';
 
 function GameManager() {
   const { agents, loading, error } = useContext(AgentContext);
+  const [gameMode, setGameMode] = useState('agent'); // 'agent' ou 'ability'
   const [randomAgent, setRandomAgent] = useState(null);
   const [guesses, setGuesses] = useState([]);
   const [showMenu, setShowMenu] = useState(false);
@@ -18,10 +21,10 @@ function GameManager() {
   }, [agents]);
 
   useEffect(() => {
-    if (agents && agents.length > 0) {
+    if (agents && agents.length > 0 && gameMode === 'agent') {
       selectRandomAgent();
     }
-  }, [agents, selectRandomAgent]);
+  }, [agents, selectRandomAgent, gameMode]);
 
   const handleSearch = (agentName) => {
     if (!randomAgent || !agents) return;
@@ -46,7 +49,6 @@ function GameManager() {
         }
       };
     
-    
       setGuesses(prevGuesses => [newGuess, ...prevGuesses]);
 
       if (isCorrect) {
@@ -60,9 +62,20 @@ function GameManager() {
 
   const handleRestart = () => {
     setIsFinished(false);
-    selectRandomAgent();
+    if (gameMode === 'agent') {
+      selectRandomAgent();
+    }
     setGuesses([]);
     setShowMenu(false);
+  };
+
+  const handleModeSelect = (mode) => {
+    console.log('Trocando para modo:', mode);
+    setGameMode(mode);
+    setGuesses([]);
+    setShowMenu(false);
+    setIsFinished(false);
+    setRandomAgent(null);
   };
 
   // Tela de carregamento
@@ -70,7 +83,7 @@ function GameManager() {
     return (
       <div className="game-container">
         <div className="game-header">
-          <h1>Adivinhe o agente de Valorant de hoje!</h1>
+          <h1>Valorant Game</h1>
           <div className="loading-message">
             <span className="stat-icon">⏳</span>
             Carregando agentes da API do Valorant...
@@ -85,7 +98,7 @@ function GameManager() {
     return (
       <div className="game-container">
         <div className="game-header">
-          <h1>Adivinhe o agente de Valorant de hoje!</h1>
+          <h1>Valorant Game</h1>
           <div className="error-message">
             <span className="stat-icon">❌</span>
             {error}
@@ -106,7 +119,7 @@ function GameManager() {
     return (
       <div className="game-container">
         <div className="game-header">
-          <h1>Adivinhe o agente de Valorant de hoje!</h1>
+          <h1>Valorant Game</h1>
           <div className="loading-message">
             <span className="stat-icon">⏳</span>
             Nenhum agente encontrado. Tente recarregar a página.
@@ -116,10 +129,35 @@ function GameManager() {
     );
   }
 
+  // Seletor de modo
+  if (!gameMode) {
+    return (
+      <div className="game-container">
+        <GameModeSelector onModeSelect={handleModeSelect} currentMode={gameMode} />
+      </div>
+    );
+  }
+
+  // Modo de habilidade
+  if (gameMode === 'ability') {
+    return (
+      <AbilityGame 
+        agents={agents} 
+        onBackToModeSelect={() => handleModeSelect(null)} 
+      />
+    );
+  }
+
+  // Modo de agente (padrão)
   return (
     <div className="game-container">
       <div className="game-header">
-        <h1>Adivinhe o agente de Valorant de hoje!</h1>
+        <div className="header-content">
+          <button onClick={() => handleModeSelect(null)} className="back-button">
+            ← Voltar aos Modos
+          </button>
+          <h1>Adivinhe o agente de Valorant de hoje!</h1>
+        </div>
       </div>
 
       <SearchBar onSearch={handleSearch} guesses={guesses} isFinished={isFinished} agents={agents}/>
@@ -128,7 +166,12 @@ function GameManager() {
         <GuessResult key={index} guess={guess} />
       ))}
       
-      {showMenu && <Menu onRestart={handleRestart} />}
+      {showMenu && <Menu onRestart={handleRestart} gameMode={gameMode} onSwitchMode={() => {
+        console.log('Tentando trocar modo. Modo atual:', gameMode);
+        const newMode = gameMode === 'agent' ? 'ability' : 'agent';
+        console.log('Novo modo:', newMode);
+        handleModeSelect(newMode);
+      }} />}
     </div>
   );
 }
