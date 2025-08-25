@@ -31,31 +31,57 @@ function SearchBar({ onSearch, guesses, isFinished, agents }) {
     }
   };
 
+  const handleSearch = () => {
+    if (inputValue.trim() && !isFinished) {
+      onSearch(inputValue.trim());
+      setInputValue('');
+      setSuggestions([]);
+    }
+  };
+
   const handleKeyDown = (event) => {
-    if (event.key === 'Enter' && suggestions.length > 0) {
-      const firstSuggestion = suggestions[0];
-      handleSuggestionClick(firstSuggestion.name);
+    if (event.key === 'Enter') {
+      if (suggestions.length > 0) {
+        const firstSuggestion = suggestions[0];
+        handleSuggestionClick(firstSuggestion.name);
+      } else {
+        handleSearch();
+      }
     }
   };
 
   return (
     <div className="search-bar">
-      <input
-        type="text"
-        value={inputValue}
-        onKeyDown={handleKeyDown}
-        onChange={handleInputChange}
-        placeholder="Digite o nome do agente"
-      />
-      <button onClick={() => onSearch(inputValue)}>Buscar</button>
-      <ul className="suggestions">
-        {suggestions.map((agent) => (
-          <li key={agent.name} onClick={() => handleSuggestionClick(agent.name)}>
-            <img src={agent.imageUrl} alt={agent.name} />
-            <span>{agent.name}</span>
-          </li>
-        ))}
-      </ul>
+      <div className="search-input-container">
+        <input
+          type="text"
+          value={inputValue}
+          onKeyDown={handleKeyDown}
+          onChange={handleInputChange}
+          placeholder="Digite o nome do agente..."
+          disabled={isFinished}
+          className="search-input"
+        />
+        <button 
+          onClick={handleSearch} 
+          disabled={isFinished || !inputValue.trim()}
+          className="search-button"
+        >
+          <span className="search-icon">🔍</span>
+          Buscar
+        </button>
+      </div>
+      
+      {suggestions.length > 0 && (
+        <ul className="suggestions">
+          {suggestions.map((agent) => (
+            <li key={agent.name} onClick={() => handleSuggestionClick(agent.name)}>
+              <img src={agent.imageUrl} alt={agent.name} />
+              <span>{agent.name}</span>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
