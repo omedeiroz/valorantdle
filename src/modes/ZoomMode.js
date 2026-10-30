@@ -4,9 +4,9 @@ import { seededFloat } from '../utils/daily';
 import GuessMode from './GuessMode';
 
 // Zoom inicial e quanto ele diminui a cada erro.
-const ZOOM_START = 5;
-const ZOOM_STEP = 0.55;
-const ZOOM_MIN = 1.4;
+const ZOOM_START = 8;
+const ZOOM_STEP = 0.8;
+const ZOOM_MIN = 1.8;
 
 // Região do retrato onde costuma estar o agente (evita cair no fundo transparente).
 const FOCUS_X = [36, 64];
