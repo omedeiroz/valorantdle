@@ -12,7 +12,7 @@ A tela inicial reúne todos os minigames e mostra quantos desafios de hoje você
 - **Habilidade**: adivinhe de quem é a habilidade. O ícone desvira após 3 erros e o nome aparece após 6. Depois de acertar, tem um bônus de uma chance: qual tecla é (C, Q, E ou X).
 - **Zoom**: adivinhe o agente por um pedaço bem ampliado do retrato, que abre um pouco a cada erro. No **Modo Radiante** dá para tirar a cor, girar a imagem ou os dois (as opções travam após o primeiro palpite).
 - **Que mapa é esse?**: um pedaço bem ampliado do minimapa (o mesmo do "Onde estou?"), que abre a cada erro. No **Modo Radiante** o minimapa gira.
-- **Onde estou?**: no estilo LostGamer, 5 rodadas por partida. Aparece um callout (ex.: "A Main" na Ascent) e você clica no minimapa onde ele fica: quanto mais perto, mais pontos (até 5.000 por rodada). No infinito dá para escolher um mapa só. A aba **Imagens** usa prints do jogo no lugar do nome e é liberada quando houver pontos cadastrados.
+- **Onde estou?**: no estilo LostGamer, 5 rodadas por partida. Aparece um callout em português, com os nomes oficiais da Riot (ex.: "Principal (A)" na Ascent) e você clica no minimapa onde ele fica: quanto mais perto, mais pontos (até 5.000 por rodada). No infinito dá para escolher um mapa só. A aba **Imagens** usa prints do jogo no lugar do nome e é liberada quando houver pontos cadastrados.
 
 Cada modo tem duas variantes:
 

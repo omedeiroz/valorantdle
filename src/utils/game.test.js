@@ -79,13 +79,20 @@ describe('daily', () => {
 describe('mapa', () => {
   const { distance, scoreFor, MAX_SCORE } = require('./mapScore');
   const { buildRounds } = require('./mapRounds');
-  const { toMinimap } = require('../services/mapsApi');
+  const { toMinimap, calloutLabel } = require('../services/mapsApi');
 
   it('dá pontuação máxima perto do local e cai com a distância', () => {
     expect(scoreFor(0.01)).toBe(MAX_SCORE);
     expect(scoreFor(0.1)).toBeLessThan(scoreFor(0.05));
     expect(scoreFor(0.9)).toBeLessThan(10);
     expect(distance({ x: 0, y: 0 }, { x: 0.3, y: 0.4 })).toBeCloseTo(0.5);
+  });
+
+  it('junta lugar e área no nome do callout', () => {
+    expect(calloutLabel({ regionName: 'Principal', superRegionName: 'A' })).toBe('Principal (A)');
+    expect(calloutLabel({ regionName: 'Mercado', superRegionName: 'Meio' })).toBe('Mercado (Meio)');
+    expect(calloutLabel({ regionName: 'Meio Superior', superRegionName: 'Meio' })).toBe('Meio Superior');
+    expect(calloutLabel({ regionName: 'Spawn', superRegionName: '' })).toBe('Spawn');
   });
 
   it('troca os eixos ao converter coordenadas do jogo para o minimapa', () => {

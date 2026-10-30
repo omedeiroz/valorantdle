@@ -1,14 +1,9 @@
-// Callouts em inglês: é como a comunidade (inclusive no Brasil) chama os lugares.
-const MAPS_URL = 'https://valorant-api.com/v1/maps';
+// Callouts em português, com as traduções oficiais da Riot.
+const MAPS_URL = 'https://valorant-api.com/v1/maps?language=pt-BR';
 
 // Mude a versão sempre que o formato dos dados mudar, para invalidar o cache antigo.
-const CACHE_KEY = 'valorantdle:maps:v2';
+const CACHE_KEY = 'valorantdle:maps:v3';
 const CACHE_TTL = 1000 * 60 * 60 * 12; // 12h
-
-const SIDE_LABEL = {
-  'Attacker Side': 'lado atacante',
-  'Defender Side': 'lado defensor',
-};
 
 /**
  * Converte coordenadas do jogo em posição no minimapa (displayIcon), de 0 a 1.
@@ -22,10 +17,18 @@ export function toMinimap(map, { x, y }) {
   };
 }
 
-function calloutLabel({ regionName, superRegionName }) {
-  if (SIDE_LABEL[superRegionName]) return `${regionName} (${SIDE_LABEL[superRegionName]})`;
-  if (!superRegionName || regionName.startsWith(superRegionName)) return regionName;
-  return `${superRegionName} ${regionName}`;
+/**
+ * Nome exibido de um callout. A API separa o lugar (regionName, ex.: "Principal")
+ * da área (superRegionName, ex.: "A"), então juntamos os dois: "Principal (A)".
+ * Isso também diferencia lugares com o mesmo nome em áreas diferentes.
+ */
+export function calloutLabel({ regionName, superRegionName }) {
+  const region = (regionName ?? '').trim();
+  const area = (superRegionName ?? '').trim();
+  // Só omite a área quando ela já aparece como palavra no nome (ex.: "Meio Superior").
+  const words = region.toLowerCase().split(/\s+/);
+  if (!area || words.includes(area.toLowerCase())) return region;
+  return `${region} (${area})`;
 }
 
 function normalizeMap(raw) {
