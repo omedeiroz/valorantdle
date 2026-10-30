@@ -38,6 +38,11 @@ export function pickSeeded(items, seed) {
   return items[hash(seed) % items.length];
 }
 
+/** Número "aleatório" entre 0 e 1, sempre o mesmo para a mesma semente. */
+export function seededFloat(seed) {
+  return hash(seed) / 0x100000000;
+}
+
 /** Escolhe um item aleatório, evitando repetir o anterior quando possível. */
 export function pickRandom(items, avoid) {
   if (!items.length) return null;

@@ -5,6 +5,7 @@ import { useKeyedState } from '../hooks/useKeyedState';
 import { useVariant } from '../hooks/useVariant';
 import { pickRandom, pickSeeded, todayKey } from '../utils/daily';
 import BonusQuestion from '../components/BonusQuestion';
+import GuessList from '../components/GuessList';
 import GuessTable from '../components/GuessTable';
 import ResultPanel from '../components/ResultPanel';
 import SearchBar from '../components/SearchBar';
@@ -20,8 +21,19 @@ import VariantToggle from '../components/VariantToggle';
  *  - `describe(item)`: texto extra na tela de vitória (opcional)
  *  - `bonus`: pergunta extra depois de acertar (opcional)
  *      { question, options: [{ value, key, label }], answerOf(item) }
+ *  - `layout`: 'table' (compara atributos) ou 'list' (só certo/errado)
  */
-export default function GuessMode({ id, label, title, pool, agentOf, renderClue, describe, bonus }) {
+export default function GuessMode({
+  id,
+  label,
+  title,
+  pool,
+  agentOf,
+  renderClue,
+  describe,
+  bonus,
+  layout = 'table',
+}) {
   const { agents } = useAgents();
   const [variant, setVariant] = useVariant(id);
   const day = todayKey();
@@ -62,7 +74,13 @@ export default function GuessMode({ id, label, title, pool, agentOf, renderClue,
         <VariantToggle value={variant} onChange={switchVariant} />
       </header>
 
-      {renderClue && renderClue(item, { attempts: game.attempts, won: game.won, revealAll: game.won && !waitingBonus })}
+      {renderClue &&
+        renderClue(item, {
+          attempts: game.attempts,
+          won: game.won,
+          revealAll: game.won && !waitingBonus,
+          gameKey,
+        })}
 
       {game.won && bonus && (
         <BonusQuestion
@@ -82,6 +100,7 @@ export default function GuessMode({ id, label, title, pool, agentOf, renderClue,
           modeLabel={label}
           detail={describe?.(item)}
           bonusResult={bonus ? bonusPick === bonusCorrect : undefined}
+          compactShare={layout === 'list'}
           onNext={nextRound}
           onPlayEndless={() => switchVariant('endless')}
         />
@@ -96,9 +115,13 @@ export default function GuessMode({ id, label, title, pool, agentOf, renderClue,
         />
       )}
 
-      <GuessTable guesses={game.guesses} answer={answer} />
+      {layout === 'table' ? (
+        <GuessTable guesses={game.guesses} answer={answer} />
+      ) : (
+        <GuessList guesses={game.guesses} answer={answer} />
+      )}
 
-      {game.attempts === 0 && (
+      {layout === 'table' && game.attempts === 0 && (
         <p className="mode__help">
           Cada palpite mostra o que bate com o agente secreto: <b className="tag tag--correct">verde</b>{' '}
           acertou e <b className="tag tag--wrong">vermelho</b> errou. Nas colunas numéricas, a seta diz se o

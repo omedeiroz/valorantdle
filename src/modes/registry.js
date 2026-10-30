@@ -1,5 +1,6 @@
 import AgentMode from './AgentMode';
 import AbilityMode from './AbilityMode';
+import ZoomMode from './ZoomMode';
 
 /**
  * Lista central dos minigames. O menu inicial e as abas do topo saem daqui.
@@ -21,6 +22,14 @@ export const MODES = [
     description: 'Reconheça o agente pelo ícone da habilidade e acerte a tecla no bônus.',
     glyph: 'Q',
     Component: AbilityMode,
+  },
+  {
+    path: 'zoom',
+    label: 'Zoom',
+    title: 'Que agente é esse?',
+    description: 'Adivinhe o agente por um pedaço ampliado do retrato. No Radiante, a imagem perde a cor e/ou gira.',
+    glyph: '◎',
+    Component: ZoomMode,
   },
   {
     path: 'mapa',

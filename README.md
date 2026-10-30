@@ -10,6 +10,7 @@ A tela inicial reúne todos os minigames.
 
 - **Agente**: adivinhe o agente secreto. Cada palpite compara gênero, função, ano de lançamento, custo da ultimate e posição no ranking de pick da ranqueada dentro da função do agente (ex.: Jett é #1 entre os duelistas), com setas ▲▼ nos números.
 - **Habilidade**: adivinhe de quem é a habilidade. O ícone desvira após 3 erros e o nome aparece após 6. Depois de acertar, tem um bônus de uma chance: qual tecla é (C, Q, E ou X).
+- **Zoom**: adivinhe o agente por um pedaço bem ampliado do retrato, que abre um pouco a cada erro. No **Modo Radiante** dá para tirar a cor, girar a imagem ou os dois (as opções travam após o primeiro palpite).
 - **Onde estou?** *(em breve)*: marcar no minimapa o local de uma imagem, no estilo LostGamer.
 
 Cada modo tem duas variantes:
@@ -30,7 +31,7 @@ npm run build  # build de produção
 
 ```
 src/
-├── App.js                 # layout, abas e rotas (#/ menu, #/agente, #/habilidade)
+├── App.js                 # layout, abas e rotas (#/ menu, #/agente, #/habilidade, #/zoom)
 ├── components/            # peças de UI reutilizáveis (busca, tabela, resultado…)
 ├── context/AgentsContext  # carrega os agentes uma vez e compartilha com o app
 ├── data/agentMeta.js      # gênero e ano de lançamento (a API não fornece)
