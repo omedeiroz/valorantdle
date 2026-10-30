@@ -1,6 +1,7 @@
 import AgentMode from './AgentMode';
 import AbilityMode from './AbilityMode';
 import ZoomMode from './ZoomMode';
+import MapMode from './MapMode';
 
 /**
  * Lista central dos minigames. O menu inicial, o menu lateral e as abas do topo saem daqui.
@@ -9,6 +10,8 @@ import ZoomMode from './ZoomMode';
  * - id:   identificador usado no progresso salvo (deve ser o mesmo `id` passado ao GuessMode)
  * - path: rota (#/path)
  * - art:  ilustração do card no menu inicial ('mosaic' | 'ability' | 'zoom' | 'map')
+ * - standalone: não depende da lista de agentes (carrega os próprios dados)
+ * - formatDone: como mostrar o resultado do desafio diário (padrão: tentativas)
  */
 export const MODES = [
   {
@@ -43,9 +46,11 @@ export const MODES = [
     path: 'mapa',
     label: 'Mapa',
     title: 'Onde estou?',
-    description: 'Veja um ponto de um mapa e marque no minimapa onde ele fica, no estilo LostGamer.',
+    description: 'Marque no minimapa onde fica cada callout. Quanto mais perto, mais pontos.',
     art: 'map',
-    Component: null,
+    Component: MapMode,
+    standalone: true,
+    formatDone: (points) => `${points.toLocaleString('pt-BR')} pts`,
   },
 ];
 

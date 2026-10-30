@@ -65,7 +65,10 @@ export default function SideMenu({ open, onClose, currentPath }) {
                 {soon ? (
                   <span className="drawer__status is-soon">Em breve</span>
                 ) : attempts != null ? (
-                  <span className="drawer__status is-done" title={`Feito em ${attempts}`}>
+                  <span
+                    className="drawer__status is-done"
+                    title={m.formatDone ? m.formatDone(attempts) : `Feito em ${attempts} tentativas`}
+                  >
                     ✓
                   </span>
                 ) : (

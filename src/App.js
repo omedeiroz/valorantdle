@@ -5,10 +5,14 @@ import { useHashRoute } from './hooks/useHashRoute';
 import Home from './components/Home';
 import SideMenu from './components/SideMenu';
 import StatusScreen from './components/StatusScreen';
+import MapEditor from './modes/MapEditor';
 import { PLAYABLE_MODES } from './modes/registry';
 
 function GameScreen({ mode }) {
   const { status, retry } = useAgents();
+  const { Component } = mode;
+
+  if (mode.standalone) return <Component key={mode.path} />;
 
   if (status === 'loading') return <StatusScreen message="Carregando agentes…" />;
   if (status === 'error') {
@@ -21,9 +25,11 @@ function GameScreen({ mode }) {
     );
   }
 
-  const { Component } = mode;
   return <Component key={mode.path} />;
 }
+
+// Rota escondida para cadastrar pontos com imagem do modo "Onde estou?".
+const EDITOR_ROUTE = 'mapa/editor';
 
 export default function App() {
   const route = useHashRoute();
@@ -68,8 +74,8 @@ export default function App() {
 
         <SideMenu open={menuOpen} onClose={closeMenu} currentPath={mode ? mode.path : route} />
 
-        <main className={`main ${mode ? '' : 'main--wide'}`}>
-          {mode ? <GameScreen mode={mode} /> : <Home />}
+        <main className={`main ${mode && mode.id !== 'map' ? '' : 'main--wide'}`}>
+          {route === EDITOR_ROUTE ? <MapEditor /> : mode ? <GameScreen mode={mode} /> : <Home />}
         </main>
 
         <footer className="footer">

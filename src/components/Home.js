@@ -3,13 +3,10 @@ import { useDailyProgress } from '../hooks/useDailyProgress';
 import { MODES } from '../modes/registry';
 import ModeArt from './ModeArt';
 
-function StatusBadge({ attempts }) {
-  if (attempts == null) return <span className="badge badge--todo">Desafio de hoje</span>;
-  return (
-    <span className="badge badge--done">
-      ✓ Feito em {attempts} {attempts === 1 ? 'tentativa' : 'tentativas'}
-    </span>
-  );
+function StatusBadge({ value, format }) {
+  if (value == null) return <span className="badge badge--todo">Desafio de hoje</span>;
+  const text = format ? format(value) : `Feito em ${value} ${value === 1 ? 'tentativa' : 'tentativas'}`;
+  return <span className="badge badge--done">✓ {text}</span>;
 }
 
 export default function Home() {
@@ -59,7 +56,7 @@ export default function Home() {
               <div className="card__body">
                 <div className="card__top">
                   <span className="card__index">{String(i + 1).padStart(2, '0')}</span>
-                  {soon ? <span className="badge badge--soon">Em breve</span> : <StatusBadge attempts={progress[m.id]} />}
+                  {soon ? <span className="badge badge--soon">Em breve</span> : <StatusBadge value={progress[m.id]} format={m.formatDone} />}
                 </div>
                 <h2 className="card__title">{m.title}</h2>
                 <p className="card__desc">{m.description}</p>

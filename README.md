@@ -11,7 +11,7 @@ A tela inicial reúne todos os minigames e mostra quantos desafios de hoje você
 - **Agente**: adivinhe o agente secreto. Cada palpite compara gênero, função, ano de lançamento, custo da ultimate e posição no ranking de pick da ranqueada dentro da função do agente (ex.: Jett é #1 entre os duelistas), com setas ▲▼ nos números.
 - **Habilidade**: adivinhe de quem é a habilidade. O ícone desvira após 3 erros e o nome aparece após 6. Depois de acertar, tem um bônus de uma chance: qual tecla é (C, Q, E ou X).
 - **Zoom**: adivinhe o agente por um pedaço bem ampliado do retrato, que abre um pouco a cada erro. No **Modo Radiante** dá para tirar a cor, girar a imagem ou os dois (as opções travam após o primeiro palpite).
-- **Onde estou?** *(em breve)*: marcar no minimapa o local de uma imagem, no estilo LostGamer.
+- **Onde estou?**: no estilo LostGamer, 5 rodadas por partida. Aparece um callout (ex.: "A Main" na Ascent) e você clica no minimapa onde ele fica: quanto mais perto, mais pontos (até 5.000 por rodada). No infinito dá para escolher um mapa só. A aba **Imagens** usa prints do jogo no lugar do nome e é liberada quando houver pontos cadastrados.
 
 Cada modo tem duas variantes:
 
@@ -31,7 +31,7 @@ npm run build  # build de produção
 
 ```
 src/
-├── App.js                 # layout, abas e rotas (#/ menu, #/agente, #/habilidade, #/zoom)
+├── App.js                 # layout, abas e rotas (#/ menu, #/agente, #/habilidade, #/zoom, #/mapa, #/mapa/editor)
 ├── components/            # peças de UI reutilizáveis (busca, tabela, resultado…)
 ├── context/AgentsContext  # carrega os agentes uma vez e compartilha com o app
 ├── data/agentMeta.js      # gênero e ano de lançamento (a API não fornece)
@@ -48,6 +48,14 @@ A API já traz o agente automaticamente. Só falta preencher gênero, ano, custo
 ### Atualizando o ranking de pick
 
 Os números de `pick` em `src/data/agentMeta.js` são o ranking geral da ranqueada; o jogo calcula sozinho a posição dentro de cada função. A cada ato, atualize as posições e o texto de `PICK_SOURCE`, que aparece embaixo da tabela.
+
+### Cadastrando imagens no "Onde estou?"
+
+1. Tire prints dentro do jogo (partida personalizada) e salve em `public/spots/`.
+2. Abra o site em `#/mapa/editor`, escolha o mapa, carregue o print e clique no local exato no minimapa.
+3. Copie a linha gerada e cole em `src/data/mapSpots.js`.
+
+No editor, a opção **Mostrar callouts** desenha os callouts da API sobre o minimapa, útil para conferir se a conversão de coordenadas (`toMinimap` em `src/services/mapsApi.js`) está batendo.
 
 ### Adicionando um minigame
 
