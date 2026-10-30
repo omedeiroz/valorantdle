@@ -1,9 +1,10 @@
 import { compareAgents, normalize, toEmojiRow } from './compare';
 import { pickRandom, pickSeeded, todayKey } from './daily';
+import { assignRoleRanks } from './ranking';
 
-const jett = { id: 'jett', name: 'Jett', gender: 'Feminino', role: 'Duelista', year: 2020, ult: 8, pick: 2 };
-const neon = { id: 'neon', name: 'Neon', gender: 'Feminino', role: 'Duelista', year: 2022, ult: 7, pick: 7 };
-const sova = { id: 'sova', name: 'Sova', gender: 'Masculino', role: 'Iniciador', year: 2020, ult: 8, pick: 4 };
+const jett = { id: 'jett', name: 'Jett', gender: 'Feminino', role: 'Duelista', year: 2020, ult: 8, pick: 2, rolePick: 1 };
+const neon = { id: 'neon', name: 'Neon', gender: 'Feminino', role: 'Duelista', year: 2022, ult: 7, pick: 7, rolePick: 3 };
+const sova = { id: 'sova', name: 'Sova', gender: 'Masculino', role: 'Iniciador', year: 2020, ult: 8, pick: 4, rolePick: 1 };
 
 describe('compareAgents', () => {
   it('marca tudo como correto quando é o próprio agente', () => {
@@ -25,15 +26,29 @@ describe('compareAgents', () => {
   it('compara custo da ultimate e ranking de pick com setas', () => {
     const c = compareAgents(neon, jett);
     expect(c.ult).toEqual({ value: '7 pts', status: 'higher' });
-    expect(c.pick).toEqual({ value: '#7', status: 'lower' });
+    expect(c.rolePick).toEqual({ value: '#3', status: 'lower' });
   });
 
   it('mostra agente sem ranking como "Novo"', () => {
-    expect(compareAgents({ ...jett, id: 'x', pick: null }, jett).pick).toEqual({ value: 'Novo', status: 'wrong' });
+    expect(compareAgents({ ...jett, id: 'x', rolePick: null }, jett).rolePick).toEqual({ value: 'Novo', status: 'wrong' });
   });
 
   it('trata ano desconhecido como errado', () => {
     expect(compareAgents({ ...jett, id: 'x', year: null }, jett).year.status).toBe('wrong');
+  });
+});
+
+describe('assignRoleRanks', () => {
+  it('ranqueia cada agente só entre os da mesma função', () => {
+    const ranked = assignRoleRanks([
+      { id: 'clove', role: 'Controlador', pick: 1 },
+      { id: 'jett', role: 'Duelista', pick: 2 },
+      { id: 'reyna', role: 'Duelista', pick: 5 },
+      { id: 'omen', role: 'Controlador', pick: 14 },
+      { id: 'hush', role: 'Duelista', pick: null },
+    ]);
+    const rank = Object.fromEntries(ranked.map((a) => [a.id, a.rolePick]));
+    expect(rank).toEqual({ clove: 1, jett: 1, reyna: 2, omen: 2, hush: null });
   });
 });
 

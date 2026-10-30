@@ -20,7 +20,8 @@ export const ATTRIBUTES = [
   { key: 'role', label: 'Função', compare: compareText, format: (v) => v },
   { key: 'year', label: 'Lançamento', compare: compareNumber, format: (v) => v ?? '?' },
   { key: 'ult', label: 'Ultimate', compare: compareNumber, format: (v) => (v == null ? '?' : `${v} pts`) },
-  { key: 'pick', label: 'Pick', compare: compareNumber, format: (v) => (v == null ? 'Novo' : `#${v}`) },
+  // Posição no ranking de pick entre os agentes da mesma função.
+  { key: 'rolePick', label: 'Pick na função', compare: compareNumber, format: (v) => (v == null ? 'Novo' : `#${v}`) },
 ];
 
 export function compareAgents(guess, answer) {

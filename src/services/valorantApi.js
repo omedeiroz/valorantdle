@@ -1,10 +1,11 @@
 import { AGENT_META, UNKNOWN } from '../data/agentMeta';
+import { assignRoleRanks } from '../utils/ranking';
 
 const AGENTS_URL =
   'https://valorant-api.com/v1/agents?isPlayableCharacter=true&language=pt-BR';
 
 // Mude a versão sempre que o formato dos dados mudar, para invalidar o cache antigo.
-const CACHE_KEY = 'valorantdle:agents:v2';
+const CACHE_KEY = 'valorantdle:agents:v3';
 const CACHE_TTL = 1000 * 60 * 60 * 12; // 12h
 
 function normalizeAgent(raw) {
@@ -63,9 +64,9 @@ export async function fetchAgents({ signal } = {}) {
   const { data } = await response.json();
   if (!Array.isArray(data)) throw new Error('Resposta inesperada da API');
 
-  const agents = data
-    .map(normalizeAgent)
-    .sort((a, b) => a.name.localeCompare(b.name));
+  const agents = assignRoleRanks(data.map(normalizeAgent)).sort((a, b) =>
+    a.name.localeCompare(b.name),
+  );
 
   writeCache(agents);
   return agents;

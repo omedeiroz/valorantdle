@@ -8,7 +8,7 @@ Jogo de adivinhação de Valorant inspirado no [Loldle](https://loldle.net).
 
 A tela inicial reúne todos os minigames.
 
-- **Agente**: adivinhe o agente secreto. Cada palpite compara gênero, função, ano de lançamento, custo da ultimate e posição no ranking de pick da ranqueada (com setas ▲▼ nos números).
+- **Agente**: adivinhe o agente secreto. Cada palpite compara gênero, função, ano de lançamento, custo da ultimate e posição no ranking de pick da ranqueada dentro da função do agente (ex.: Jett é #1 entre os duelistas), com setas ▲▼ nos números.
 - **Habilidade**: adivinhe de quem é a habilidade. O ícone desvira após 3 erros e o nome aparece após 6. Depois de acertar, tem um bônus de uma chance: qual tecla é (C, Q, E ou X).
 - **Onde estou?** *(em breve)*: marcar no minimapa o local de uma imagem, no estilo LostGamer.
 
@@ -46,7 +46,7 @@ A API já traz o agente automaticamente. Só falta preencher gênero, ano, custo
 
 ### Atualizando o ranking de pick
 
-Os números de `pick` em `src/data/agentMeta.js` são um retrato da ranqueada. A cada ato, atualize as posições e o texto de `PICK_SOURCE`, que aparece embaixo da tabela.
+Os números de `pick` em `src/data/agentMeta.js` são o ranking geral da ranqueada; o jogo calcula sozinho a posição dentro de cada função. A cada ato, atualize as posições e o texto de `PICK_SOURCE`, que aparece embaixo da tabela.
 
 ### Adicionando um minigame
 

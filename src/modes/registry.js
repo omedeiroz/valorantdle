@@ -10,7 +10,7 @@ export const MODES = [
     path: 'agente',
     label: 'Agente',
     title: 'Adivinhe o agente',
-    description: 'Descubra o agente secreto comparando gênero, função, lançamento, ultimate e pick.',
+    description: 'Descubra o agente secreto comparando gênero, função, lançamento, ultimate e pick na função.',
     glyph: '?',
     Component: AgentMode,
   },

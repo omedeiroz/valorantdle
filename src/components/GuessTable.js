@@ -66,7 +66,7 @@ export default function GuessTable({ guesses, answer }) {
           })}
         </div>
       </div>
-      <p className="guess-table__source">Pick: {PICK_SOURCE}</p>
+      <p className="guess-table__source">Pick na função: {PICK_SOURCE}</p>
     </>
   );
 }

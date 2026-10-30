@@ -5,7 +5,8 @@
 // gender: gênero do agente
 // year:   ano de lançamento
 // ult:    custo da ultimate em pontos
-// pick:   posição no ranking de pick da ranqueada (1 = mais escolhido)
+// pick:   posição no ranking GERAL de pick da ranqueada (1 = mais escolhido).
+//         O jogo converte isso sozinho no ranking dentro de cada função.
 
 /** De onde veio o ranking de pick. Atualize junto com os números. */
 export const PICK_SOURCE = 'Ranqueada, todos os elos · Temporada 2026, Ato 5 · MetaBot';
