@@ -23,7 +23,7 @@ const BONUS = {
 const agentOf = (ability) => ability.agent;
 const plural = (n) => `${n} ${n === 1 ? 'tentativa' : 'tentativas'}`;
 
-function AbilityClue({ ability, attempts, won, revealAll }) {
+function AbilityClue({ ability, attempts, won, revealAll, gameKey }) {
   const unflipped = won || attempts >= HINT_UNFLIP;
   const named = won || attempts >= HINT_NAME;
 
@@ -33,7 +33,8 @@ function AbilityClue({ ability, attempts, won, revealAll }) {
 
   return (
     <div className="clue">
-      <div className={`clue__icon ${unflipped ? '' : 'is-flipped'}`}>
+      {/* `key` recria o ícone a cada rodada, para ele já nascer virado (sem animar e revelar). */}
+      <div key={`${gameKey}:${ability.id}`} className={`clue__icon ${unflipped ? '' : 'is-flipped'}`}>
         <img src={ability.icon} alt={named ? ability.name : 'Habilidade secreta'} />
       </div>
       <div className="clue__text">

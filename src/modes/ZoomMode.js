@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { useAgents } from '../context/AgentsContext';
 import { useKeyedState } from '../hooks/useKeyedState';
 import { seededFloat } from '../utils/daily';
@@ -28,6 +29,32 @@ function radiantLabel(radiant) {
   return parts.length ? `Zoom · Radiante (${parts.join(' + ')})` : 'Zoom';
 }
 
+/**
+ * A imagem é recriada a cada rodada (via `key`), então já nasce ampliada,
+ * sem animar a partir do retrato inteiro da rodada anterior. Ela também fica
+ * invisível até carregar, para não piscar antes do zoom.
+ */
+function ZoomImage({ src, alt, transform, gray }) {
+  const ref = useRef(null);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    if (ref.current?.complete) setLoaded(true);
+  }, []);
+
+  return (
+    <img
+      ref={ref}
+      className={`zoom__image ${gray ? 'is-gray' : ''} ${loaded ? '' : 'is-loading'}`}
+      src={src}
+      alt={alt}
+      style={{ transform }}
+      draggable={false}
+      onLoad={() => setLoaded(true)}
+    />
+  );
+}
+
 function ZoomClue({ agent, attempts, won, gameKey, radiant, setRadiant }) {
   // Ponto de foco e ângulo fixos por partida: todos veem o mesmo no diário.
   const seed = `${gameKey}:${agent.id}`;
@@ -49,12 +76,12 @@ function ZoomClue({ agent, attempts, won, gameKey, radiant, setRadiant }) {
   return (
     <div className="zoom">
       <div className="zoom__frame">
-        <img
-          className={`zoom__image ${gray ? 'is-gray' : ''}`}
+        <ZoomImage
+          key={seed}
           src={agent.portrait}
           alt={won ? agent.name : 'Agente secreto ampliado'}
-          style={{ transform }}
-          draggable={false}
+          transform={transform}
+          gray={gray}
         />
       </div>
 

@@ -790,6 +790,10 @@ a.game-card:hover::after {
   transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.6s ease;
 }
 
+.zoom__image.is-loading {
+  opacity: 0;
+}
+
 .zoom__image.is-gray {
   filter: grayscale(1) contrast(1.1);
 }
