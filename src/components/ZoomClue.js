@@ -48,6 +48,7 @@ function ZoomImage({ src, alt, transform, gray, fit }) {
  *
  * zoom:   { start, step, min } — zoom inicial, quanto diminui por erro e o mínimo
  * focus:  { x: [min, max], y: [min, max] } — região (em %) onde o foco pode cair
+ *         ou focusPoint: { x, y } (em %) para fixar o foco num ponto específico
  * aspect: proporção do quadro ('1 / 1', '16 / 9'…)
  * fit:    'contain' (retratos com fundo transparente) ou 'cover' (artes que preenchem tudo)
  * radiantOptions: quais opções do Radiante o modo oferece (padrão: todas)
@@ -62,6 +63,7 @@ export default function ZoomClue({
   itemId,
   zoom,
   focus,
+  focusPoint,
   aspect = '1 / 1',
   fit = 'contain',
   radiant,
@@ -71,8 +73,8 @@ export default function ZoomClue({
   const enabled = (key) => radiantOptions.some((o) => o.key === key) && !!radiant[key];
   // Ponto de foco e ângulo fixos por partida: todos veem o mesmo no diário.
   const seed = `${gameKey}:${itemId}`;
-  const x = lerp(focus.x, seededFloat(`${seed}:x`));
-  const y = lerp(focus.y, seededFloat(`${seed}:y`));
+  const x = focusPoint ? focusPoint.x : lerp(focus.x, seededFloat(`${seed}:x`));
+  const y = focusPoint ? focusPoint.y : lerp(focus.y, seededFloat(`${seed}:y`));
   const angle = ANGLES[Math.floor(seededFloat(`${seed}:a`) * ANGLES.length)];
 
   const scale = Math.max(zoom.min, zoom.start - attempts * zoom.step);

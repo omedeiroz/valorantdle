@@ -64,7 +64,7 @@ function MapZoomArt() {
   const { maps } = useMaps();
   // Mapa aleatório que não seja a resposta de hoje.
   const map = useMemo(() => {
-    const withArt = maps.filter((m) => m.splash);
+    const withArt = maps.filter((m) => m.minimap && m.callouts.length);
     const answer = pickSeeded(withArt, `mapzoom:${todayKey()}`)?.id;
     const safe = withArt.filter((m) => m.id !== answer);
     return safe[Math.floor(Math.random() * safe.length)] ?? null;
@@ -72,7 +72,7 @@ function MapZoomArt() {
 
   return (
     <div className="art art--zoom art--mapzoom">
-      {map && <img src={map.splash} alt="" loading="lazy" />}
+      {map && <img src={map.minimap} alt="" loading="lazy" />}
       <span className="art__reticle" />
     </div>
   );

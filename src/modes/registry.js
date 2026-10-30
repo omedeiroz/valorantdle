@@ -47,7 +47,7 @@ export const MODES = [
     path: 'que-mapa',
     label: 'Que mapa',
     title: 'Que mapa é esse?',
-    description: 'Um pedaço ampliado da arte de um mapa, que abre a cada erro. No Radiante, a imagem gira.',
+    description: 'Um pedaço ampliado do minimapa, que abre a cada erro. No Radiante, o minimapa gira.',
     art: 'mapzoom',
     Component: MapZoomMode,
     standalone: true,

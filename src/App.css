@@ -993,11 +993,14 @@ a.card:hover .art--zoom img {
 }
 
 .art--mapzoom img {
-  transform: scale(2.2);
+  object-fit: contain;
+  filter: none;
+  transform: rotate(-12deg) scale(1.8);
 }
 
 a.card:hover .art--mapzoom img {
-  transform: scale(1.7);
+  filter: none;
+  transform: rotate(0deg) scale(1.4);
 }
 
 .art__reticle {
