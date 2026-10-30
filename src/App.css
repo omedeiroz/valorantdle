@@ -277,6 +277,7 @@
 .search__option img {
   width: 36px;
   height: 36px;
+  object-fit: cover;
   border-radius: 2px;
   background: var(--bg-sunken);
 }
@@ -452,6 +453,12 @@
   border: 1px solid rgba(24, 180, 123, 0.5);
   border-radius: var(--radius);
   animation: rise 0.5s 0.5s ease both;
+}
+
+.result__portrait--wide {
+  width: 240px !important;
+  margin: 0 !important;
+  object-position: center !important;
 }
 
 .result__portrait {
@@ -985,6 +992,14 @@ a.card:hover .art--zoom img {
   filter: grayscale(0.3) contrast(1.05);
 }
 
+.art--mapzoom img {
+  transform: scale(2.2);
+}
+
+a.card:hover .art--mapzoom img {
+  transform: scale(1.7);
+}
+
 .art__reticle {
   position: absolute;
   top: 50%;
@@ -1276,6 +1291,10 @@ a.drawer__link:hover {
     var(--bg-sunken);
 }
 
+.zoom__frame--wide {
+  width: 400px;
+}
+
 .zoom__image {
   position: absolute;
   inset: 0;
@@ -1386,6 +1405,7 @@ a.drawer__link:hover {
 .guess-list__item img {
   width: 44px;
   height: 44px;
+  object-fit: cover;
   border-radius: 2px;
 }
 

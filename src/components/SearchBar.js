@@ -3,7 +3,13 @@ import { normalize } from '../utils/compare';
 
 const MAX_SUGGESTIONS = 8;
 
-export default function SearchBar({ agents, excludeIds, onSelect, disabled }) {
+export default function SearchBar({
+  agents,
+  excludeIds,
+  onSelect,
+  disabled,
+  placeholder = 'Digite o nome de um agente…',
+}) {
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
@@ -57,7 +63,7 @@ export default function SearchBar({ agents, excludeIds, onSelect, disabled }) {
           ref={inputRef}
           type="text"
           className="search__input"
-          placeholder={disabled ? 'Rodada concluída' : 'Digite o nome de um agente…'}
+          placeholder={disabled ? 'Rodada concluída' : placeholder}
           value={query}
           disabled={disabled}
           autoComplete="off"
@@ -104,7 +110,7 @@ export default function SearchBar({ agents, excludeIds, onSelect, disabled }) {
             >
               <img src={agent.icon} alt="" loading="lazy" />
               <span>{agent.name}</span>
-              <small>{agent.role}</small>
+              {agent.role && <small>{agent.role}</small>}
             </li>
           ))}
         </ul>

@@ -1,0 +1,1 @@
+Prints do modo "Onde estou?". Veja src/data/mapSpots.js.

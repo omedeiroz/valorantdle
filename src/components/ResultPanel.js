@@ -45,7 +45,13 @@ export default function ResultPanel({
 
   return (
     <section className="result" aria-live="polite">
-      <img className="result__portrait" src={answer.portrait} alt="" />
+      {answer.portrait && (
+        <img
+          className={`result__portrait ${answer.wideArt ? 'result__portrait--wide' : ''}`}
+          src={answer.portrait}
+          alt=""
+        />
+      )}
       <div className="result__body">
         <p className="result__eyebrow">Você acertou!</p>
         <h2 className="result__title">{answer.name}</h2>

@@ -2,6 +2,7 @@ import AgentMode from './AgentMode';
 import AbilityMode from './AbilityMode';
 import ZoomMode from './ZoomMode';
 import MapMode from './MapMode';
+import MapZoomMode from './MapZoomMode';
 
 /**
  * Lista central dos minigames. O menu inicial, o menu lateral e as abas do topo saem daqui.
@@ -9,7 +10,7 @@ import MapMode from './MapMode';
  *
  * - id:   identificador usado no progresso salvo (deve ser o mesmo `id` passado ao GuessMode)
  * - path: rota (#/path)
- * - art:  ilustração do card no menu inicial ('mosaic' | 'ability' | 'zoom' | 'map')
+ * - art:  ilustração do card no menu inicial ('mosaic' | 'ability' | 'zoom' | 'mapzoom' | 'map')
  * - standalone: não depende da lista de agentes (carrega os próprios dados)
  * - formatDone: como mostrar o resultado do desafio diário (padrão: tentativas)
  */
@@ -42,9 +43,19 @@ export const MODES = [
     Component: ZoomMode,
   },
   {
+    id: 'mapzoom',
+    path: 'que-mapa',
+    label: 'Que mapa',
+    title: 'Que mapa é esse?',
+    description: 'Um pedaço ampliado da arte de um mapa, que abre a cada erro. No Radiante, a imagem gira.',
+    art: 'mapzoom',
+    Component: MapZoomMode,
+    standalone: true,
+  },
+  {
     id: 'map',
     path: 'mapa',
-    label: 'Mapa',
+    label: 'Onde estou',
     title: 'Onde estou?',
     description: 'Marque no minimapa onde fica cada callout. Quanto mais perto, mais pontos.',
     art: 'map',

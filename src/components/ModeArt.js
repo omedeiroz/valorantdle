@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useAgents } from '../context/AgentsContext';
+import { useMaps } from '../hooks/useMaps';
 import { pickSeeded, todayKey } from '../utils/daily';
 
 const SLOT_KEYS = { Grenade: 'C', Ability1: 'Q', Ability2: 'E', Ultimate: 'X' };
@@ -59,6 +60,24 @@ function Zoom({ agent }) {
   );
 }
 
+function MapZoomArt() {
+  const { maps } = useMaps();
+  // Mapa aleatório que não seja a resposta de hoje.
+  const map = useMemo(() => {
+    const withArt = maps.filter((m) => m.splash);
+    const answer = pickSeeded(withArt, `mapzoom:${todayKey()}`)?.id;
+    const safe = withArt.filter((m) => m.id !== answer);
+    return safe[Math.floor(Math.random() * safe.length)] ?? null;
+  }, [maps]);
+
+  return (
+    <div className="art art--zoom art--mapzoom">
+      {map && <img src={map.splash} alt="" loading="lazy" />}
+      <span className="art__reticle" />
+    </div>
+  );
+}
+
 function MapArt() {
   return (
     <div className="art art--map">
@@ -76,5 +95,6 @@ export default function ModeArt({ type }) {
   if (type === 'mosaic') return <Mosaic />;
   if (type === 'ability') return <Abilities agent={agent} />;
   if (type === 'zoom') return <Zoom agent={agent} />;
+  if (type === 'mapzoom') return <MapZoomArt />;
   return <MapArt />;
 }

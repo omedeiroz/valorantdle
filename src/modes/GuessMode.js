@@ -23,6 +23,9 @@ import VariantToggle from '../components/VariantToggle';
  *  - `bonus`: pergunta extra depois de acertar (opcional)
  *      { question, options: [{ value, key, label }], answerOf(item) }
  *  - `layout`: 'table' (compara atributos) ou 'list' (só certo/errado)
+ *  - `options`: lista de respostas possíveis na busca (padrão: os agentes).
+ *      Cada uma precisa de { id, name, icon }; `portrait` aparece na vitória.
+ *  - `searchPlaceholder`: texto da busca
  */
 export default function GuessMode({
   id,
@@ -34,8 +37,11 @@ export default function GuessMode({
   describe,
   bonus,
   layout = 'table',
+  options,
+  searchPlaceholder,
 }) {
-  const { agents } = useAgents();
+  const { agents: allAgents } = useAgents();
+  const agents = options ?? allAgents;
   const [variant, setVariant] = useVariant(id);
   const day = todayKey();
 
@@ -119,6 +125,7 @@ export default function GuessMode({
           excludeIds={game.guesses.map((g) => g.id)}
           onSelect={game.submit}
           disabled={game.won}
+          placeholder={searchPlaceholder}
         />
       )}
 

@@ -2,7 +2,7 @@
 const MAPS_URL = 'https://valorant-api.com/v1/maps';
 
 // Mude a versão sempre que o formato dos dados mudar, para invalidar o cache antigo.
-const CACHE_KEY = 'valorantdle:maps:v1';
+const CACHE_KEY = 'valorantdle:maps:v2';
 const CACHE_TTL = 1000 * 60 * 60 * 12; // 12h
 
 const SIDE_LABEL = {
@@ -44,6 +44,7 @@ function normalizeMap(raw) {
     name: raw.displayName,
     minimap: raw.displayIcon,
     splash: raw.splash,
+    thumb: raw.listViewIcon ?? raw.splash,
     callouts,
   };
 }
