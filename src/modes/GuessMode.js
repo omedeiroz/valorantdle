@@ -1,8 +1,10 @@
 import { useMemo, useState } from 'react';
 import { useAgents } from '../context/AgentsContext';
 import { useGuessGame } from '../hooks/useGuessGame';
+import { useKeyedState } from '../hooks/useKeyedState';
 import { useVariant } from '../hooks/useVariant';
 import { pickRandom, pickSeeded, todayKey } from '../utils/daily';
+import BonusQuestion from '../components/BonusQuestion';
 import GuessTable from '../components/GuessTable';
 import ResultPanel from '../components/ResultPanel';
 import SearchBar from '../components/SearchBar';
@@ -16,8 +18,10 @@ import VariantToggle from '../components/VariantToggle';
  *  - `agentOf(item)`: qual agente é a resposta daquele desafio
  *  - `renderClue(item, ctx)`: a pista exibida acima da busca (opcional)
  *  - `describe(item)`: texto extra na tela de vitória (opcional)
+ *  - `bonus`: pergunta extra depois de acertar (opcional)
+ *      { question, options: [{ value, key, label }], answerOf(item) }
  */
-export default function GuessMode({ id, label, title, pool, agentOf, renderClue, describe }) {
+export default function GuessMode({ id, label, title, pool, agentOf, renderClue, describe, bonus }) {
   const { agents } = useAgents();
   const [variant, setVariant] = useVariant(id);
   const day = todayKey();
@@ -29,12 +33,11 @@ export default function GuessMode({ id, label, title, pool, agentOf, renderClue,
   const item = variant === 'daily' ? dailyItem : endlessItem;
   const answer = item ? agentOf(item) : null;
 
-  const game = useGuessGame({
-    agents,
-    answerId: answer?.id,
-    gameKey: variant === 'daily' ? `${id}:${day}` : `${id}:endless:${round}`,
-    persist: variant === 'daily',
-  });
+  const persist = variant === 'daily';
+  const gameKey = persist ? `${id}:${day}` : `${id}:endless:${round}`;
+
+  const game = useGuessGame({ agents, answerId: answer?.id, gameKey, persist });
+  const [bonusPick, setBonusPick] = useKeyedState(`${gameKey}:bonus`, persist, null);
 
   const nextRound = () => {
     setEndlessItem((prev) => pickRandom(pool, prev));
@@ -49,6 +52,9 @@ export default function GuessMode({ id, label, title, pool, agentOf, renderClue,
 
   if (!item) return null;
 
+  const bonusCorrect = bonus && item ? bonus.answerOf(item) : null;
+  const waitingBonus = game.won && bonus && bonusPick == null;
+
   return (
     <section className="mode">
       <header className="mode__header">
@@ -56,19 +62,32 @@ export default function GuessMode({ id, label, title, pool, agentOf, renderClue,
         <VariantToggle value={variant} onChange={switchVariant} />
       </header>
 
-      {renderClue && renderClue(item, { attempts: game.attempts, won: game.won })}
+      {renderClue && renderClue(item, { attempts: game.attempts, won: game.won, revealAll: game.won && !waitingBonus })}
 
-      {game.won ? (
+      {game.won && bonus && (
+        <BonusQuestion
+          question={bonus.question}
+          options={bonus.options}
+          correct={bonusCorrect}
+          picked={bonusPick}
+          onPick={setBonusPick}
+        />
+      )}
+
+      {game.won && !waitingBonus && (
         <ResultPanel
           answer={answer}
           guesses={game.guesses}
           variant={variant}
           modeLabel={label}
           detail={describe?.(item)}
+          bonusResult={bonus ? bonusPick === bonusCorrect : undefined}
           onNext={nextRound}
           onPlayEndless={() => switchVariant('endless')}
         />
-      ) : (
+      )}
+
+      {!game.won && (
         <SearchBar
           agents={agents}
           excludeIds={game.guesses.map((g) => g.id)}
@@ -82,8 +101,8 @@ export default function GuessMode({ id, label, title, pool, agentOf, renderClue,
       {game.attempts === 0 && (
         <p className="mode__help">
           Cada palpite mostra o que bate com o agente secreto: <b className="tag tag--correct">verde</b>{' '}
-          acertou, <b className="tag tag--wrong">vermelho</b> errou, e as setas no lançamento indicam se
-          a resposta é mais recente (▲) ou mais antiga (▼).
+          acertou e <b className="tag tag--wrong">vermelho</b> errou. Nas colunas numéricas, a seta diz se o
+          número da resposta é maior (▲) ou menor (▼).
         </p>
       )}
     </section>

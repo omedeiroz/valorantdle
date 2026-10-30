@@ -4,10 +4,13 @@ Jogo de adivinhação de Valorant inspirado no [Loldle](https://loldle.net).
 
 **Jogue em:** [valorantdle.vercel.app](https://valorantdle.vercel.app)
 
-## Modos
+## Minigames
 
-- **Agente**: adivinhe o agente secreto. Cada palpite mostra se gênero, função e ano de lançamento batem com a resposta.
-- **Habilidade**: adivinhe de quem é a habilidade. O ícone desvira após 3 erros e o nome aparece após 6.
+A tela inicial reúne todos os minigames.
+
+- **Agente**: adivinhe o agente secreto. Cada palpite compara gênero, função, ano de lançamento, custo da ultimate e posição no ranking de pick da ranqueada (com setas ▲▼ nos números).
+- **Habilidade**: adivinhe de quem é a habilidade. O ícone desvira após 3 erros e o nome aparece após 6. Depois de acertar, tem um bônus de uma chance: qual tecla é (C, Q, E ou X).
+- **Onde estou?** *(em breve)*: marcar no minimapa o local de uma imagem, no estilo LostGamer.
 
 Cada modo tem duas variantes:
 
@@ -27,23 +30,27 @@ npm run build  # build de produção
 
 ```
 src/
-├── App.js                 # layout, abas e rotas (#/agente, #/habilidade)
+├── App.js                 # layout, abas e rotas (#/ menu, #/agente, #/habilidade)
 ├── components/            # peças de UI reutilizáveis (busca, tabela, resultado…)
 ├── context/AgentsContext  # carrega os agentes uma vez e compartilha com o app
 ├── data/agentMeta.js      # gênero e ano de lançamento (a API não fornece)
 ├── hooks/                 # estado da partida, variante, contagem regressiva, rota
-├── modes/                 # cada modo de jogo; GuessMode é a base comum
+├── modes/                 # cada minigame; registry.js lista todos, GuessMode é a base comum
 ├── services/valorantApi   # busca e normaliza dados da valorant-api.com (com cache)
 └── utils/                 # comparação de palpites, sorteio diário, localStorage
 ```
 
 ### Adicionando um agente novo
 
-A API já traz o agente automaticamente. Só falta adicionar o gênero e o ano em `src/data/agentMeta.js`.
+A API já traz o agente automaticamente. Só falta preencher gênero, ano, custo da ultimate e ranking de pick em `src/data/agentMeta.js`.
 
-### Adicionando um modo novo
+### Atualizando o ranking de pick
 
-Crie um componente em `src/modes/` usando `GuessMode` (veja `AbilityMode.js`) e registre-o na lista `MODES` em `App.js`.
+Os números de `pick` em `src/data/agentMeta.js` são um retrato da ranqueada. A cada ato, atualize as posições e o texto de `PICK_SOURCE`, que aparece embaixo da tabela.
+
+### Adicionando um minigame
+
+Crie um componente em `src/modes/` (para jogos de adivinhar agente, use `GuessMode`, como em `AbilityMode.js`) e registre-o em `src/modes/registry.js`. Ele aparece sozinho no menu e nas abas.
 
 ---
 

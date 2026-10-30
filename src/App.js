@@ -1,17 +1,11 @@
 import './App.css';
 import { AgentsProvider, useAgents } from './context/AgentsContext';
 import { useHashRoute } from './hooks/useHashRoute';
+import Home from './components/Home';
 import StatusScreen from './components/StatusScreen';
-import AgentMode from './modes/AgentMode';
-import AbilityMode from './modes/AbilityMode';
+import { PLAYABLE_MODES } from './modes/registry';
 
-// Para criar um modo novo, basta adicioná-lo aqui.
-const MODES = [
-  { path: 'agente', label: 'Agente', Component: AgentMode },
-  { path: 'habilidade', label: 'Habilidade', Component: AbilityMode },
-];
-
-function Content({ mode }) {
+function GameScreen({ mode }) {
   const { status, retry } = useAgents();
 
   if (status === 'loading') return <StatusScreen message="Carregando agentes…" />;
@@ -31,17 +25,17 @@ function Content({ mode }) {
 
 export default function App() {
   const route = useHashRoute();
-  const mode = MODES.find((m) => m.path === route) ?? MODES[0];
+  const mode = PLAYABLE_MODES.find((m) => m.path === route);
 
   return (
     <AgentsProvider>
       <div className="app">
         <header className="topbar">
-          <a className="brand" href="#/" aria-label="Valorantdle, início">
+          <a className="brand" href="#/" aria-label="Valorantdle, menu inicial">
             VALORANT<span>DLE</span>
           </a>
-          <nav className="tabs" aria-label="Modos de jogo">
-            {MODES.map((m) => (
+          <nav className="tabs" aria-label="Minigames">
+            {PLAYABLE_MODES.map((m) => (
               <a
                 key={m.path}
                 href={`#/${m.path}`}
@@ -54,8 +48,8 @@ export default function App() {
           </nav>
         </header>
 
-        <main className="main">
-          <Content mode={mode} />
+        <main className={`main ${mode ? '' : 'main--wide'}`}>
+          {mode ? <GameScreen mode={mode} /> : <Home />}
         </main>
 
         <footer className="footer">

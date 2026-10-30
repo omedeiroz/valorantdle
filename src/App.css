@@ -12,9 +12,13 @@
 .main {
   flex: 1;
   width: 100%;
-  max-width: 760px;
+  max-width: 820px;
   margin: 0 auto;
   padding: 32px 16px 64px;
+}
+
+.main--wide {
+  max-width: 1040px;
 }
 
 .footer {
@@ -284,16 +288,30 @@
 
 /* ---------- Guess table ---------- */
 
-.guess-table {
+.guess-table-scroll {
   margin-top: 28px;
+  overflow-x: auto;
+  /* espaço para a animação de virar não ser cortada */
+  padding: 4px 0;
+}
+
+.guess-table {
   display: grid;
   gap: 6px;
+  min-width: 520px;
 }
 
 .guess-table__row {
   display: grid;
-  grid-template-columns: 72px repeat(3, 1fr);
+  grid-template-columns: 72px repeat(5, 1fr);
   gap: 6px;
+}
+
+.guess-table__source {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 0.72rem;
+  text-align: right;
 }
 
 .guess-table__head {
@@ -494,6 +512,241 @@
   }
 }
 
+/* ---------- Bonus ---------- */
+
+.bonus {
+  margin-bottom: 20px;
+  padding: 20px;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  animation: rise 0.4s 0.5s ease both;
+}
+
+.bonus__eyebrow {
+  margin: 0;
+  color: var(--red);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.bonus__question {
+  margin: 4px 0 16px;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+}
+
+.bonus__options {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.bonus__option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 8px;
+  background: var(--bg-sunken);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.bonus__option kbd {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-bottom-width: 3px;
+  border-radius: var(--radius);
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--text);
+}
+
+.bonus__option:not(:disabled):hover {
+  border-color: var(--red);
+}
+
+.bonus__option:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+.bonus__option.is-correct {
+  opacity: 1;
+  background: rgba(24, 180, 123, 0.2);
+  border-color: var(--green);
+  color: var(--text);
+}
+
+.bonus__option.is-wrong {
+  opacity: 1;
+  background: rgba(179, 58, 69, 0.25);
+  border-color: var(--wrong);
+  color: var(--text);
+}
+
+.bonus__verdict {
+  margin: 14px 0 0;
+  font-weight: 700;
+}
+
+.bonus__verdict.is-correct {
+  color: var(--green);
+}
+
+.bonus__verdict.is-wrong {
+  color: var(--red);
+}
+
+/* ---------- Home ---------- */
+
+.home__header {
+  margin: 16px 0 40px;
+}
+
+.home__eyebrow {
+  margin: 0 0 8px;
+  color: var(--red);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.home__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.6rem, 9vw, 4.6rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.home__title span {
+  color: var(--red);
+}
+
+.home__lead {
+  max-width: 480px;
+  margin: 16px 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.home__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home__grid li {
+  display: flex;
+}
+
+.game-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 240px;
+  padding: 24px;
+  overflow: hidden;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+a.game-card:hover {
+  border-color: var(--red);
+  transform: translateY(-3px);
+}
+
+a.game-card::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 0;
+  background: var(--red);
+  transition: width 0.25s ease;
+}
+
+a.game-card:hover::after {
+  width: 100%;
+}
+
+.game-card__glyph {
+  position: absolute;
+  right: -6px;
+  top: -24px;
+  font-family: var(--font-display);
+  font-size: 9rem;
+  line-height: 1;
+  color: rgba(236, 232, 225, 0.05);
+  pointer-events: none;
+}
+
+.game-card__index {
+  color: var(--red);
+  font-family: var(--font-display);
+  font-size: 1rem;
+}
+
+.game-card__title {
+  margin: 8px 0 10px;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.7rem;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.game-card__desc {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.game-card__cta {
+  margin-top: auto;
+  padding-top: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.game-card.is-soon {
+  border-style: dashed;
+  opacity: 0.6;
+}
+
+.game-card.is-soon .game-card__cta {
+  color: var(--muted);
+}
+
 /* ---------- Status ---------- */
 
 .status {
@@ -542,7 +795,7 @@
   }
 
   .guess-table__row {
-    grid-template-columns: 56px repeat(3, 1fr);
+    grid-template-columns: 56px repeat(5, 1fr);
     gap: 4px;
   }
 
@@ -573,5 +826,15 @@
   .clue__icon img {
     width: 48px;
     height: 48px;
+  }
+
+  .bonus__option kbd {
+    width: 36px;
+    height: 36px;
+    font-size: 1.1rem;
+  }
+
+  .bonus__option {
+    font-size: 0.65rem;
   }
 }

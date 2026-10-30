@@ -1,13 +1,13 @@
 import { compareAgents, normalize, toEmojiRow } from './compare';
 import { pickRandom, pickSeeded, todayKey } from './daily';
 
-const jett = { id: 'jett', name: 'Jett', gender: 'Feminino', role: 'Duelista', year: 2020 };
-const neon = { id: 'neon', name: 'Neon', gender: 'Feminino', role: 'Duelista', year: 2022 };
-const sova = { id: 'sova', name: 'Sova', gender: 'Masculino', role: 'Iniciador', year: 2020 };
+const jett = { id: 'jett', name: 'Jett', gender: 'Feminino', role: 'Duelista', year: 2020, ult: 8, pick: 2 };
+const neon = { id: 'neon', name: 'Neon', gender: 'Feminino', role: 'Duelista', year: 2022, ult: 7, pick: 7 };
+const sova = { id: 'sova', name: 'Sova', gender: 'Masculino', role: 'Iniciador', year: 2020, ult: 8, pick: 4 };
 
 describe('compareAgents', () => {
   it('marca tudo como correto quando é o próprio agente', () => {
-    expect(toEmojiRow(compareAgents(jett, jett))).toBe('🟩🟩🟩🟩');
+    expect(toEmojiRow(compareAgents(jett, jett))).toBe('🟩🟩🟩🟩🟩🟩');
   });
 
   it('indica se a resposta é mais recente ou mais antiga', () => {
@@ -20,6 +20,16 @@ describe('compareAgents', () => {
     expect(c.gender.status).toBe('wrong');
     expect(c.role.status).toBe('wrong');
     expect(c.year.status).toBe('correct');
+  });
+
+  it('compara custo da ultimate e ranking de pick com setas', () => {
+    const c = compareAgents(neon, jett);
+    expect(c.ult).toEqual({ value: '7 pts', status: 'higher' });
+    expect(c.pick).toEqual({ value: '#7', status: 'lower' });
+  });
+
+  it('mostra agente sem ranking como "Novo"', () => {
+    expect(compareAgents({ ...jett, id: 'x', pick: null }, jett).pick).toEqual({ value: 'Novo', status: 'wrong' });
   });
 
   it('trata ano desconhecido como errado', () => {

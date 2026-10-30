@@ -3,22 +3,32 @@ import { useCountdown } from '../hooks/useCountdown';
 import { compareAgents, toEmojiRow } from '../utils/compare';
 import { todayKey } from '../utils/daily';
 
-function buildShareText({ modeLabel, guesses, answer, variant }) {
+function buildShareText({ modeLabel, guesses, answer, variant, bonusResult }) {
   const header =
     variant === 'daily'
       ? `Valorantdle · ${modeLabel} · ${todayKey()}`
       : `Valorantdle · ${modeLabel} (infinito)`;
   const rows = guesses.map((g) => toEmojiRow(compareAgents(g, answer)));
   const plural = guesses.length === 1 ? 'tentativa' : 'tentativas';
-  return `${header}\n${guesses.length} ${plural}\n\n${rows.join('\n')}\n\n${window.location.href}`;
+  const bonus = bonusResult == null ? '' : `\nBônus: ${bonusResult ? '✅' : '❌'}`;
+  return `${header}\n${guesses.length} ${plural}${bonus}\n\n${rows.join('\n')}\n\n${window.location.href}`;
 }
 
-export default function ResultPanel({ answer, guesses, variant, modeLabel, detail, onNext, onPlayEndless }) {
+export default function ResultPanel({
+  answer,
+  guesses,
+  variant,
+  modeLabel,
+  detail,
+  bonusResult,
+  onNext,
+  onPlayEndless,
+}) {
   const countdown = useCountdown(variant === 'daily');
   const [copied, setCopied] = useState(false);
 
   const share = async () => {
-    const text = buildShareText({ modeLabel, guesses, answer, variant });
+    const text = buildShareText({ modeLabel, guesses, answer, variant, bonusResult });
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);
@@ -39,6 +49,7 @@ export default function ResultPanel({ answer, guesses, variant, modeLabel, detai
         {detail && <p className="result__detail">{detail}</p>}
         <p className="result__stats">
           <strong>{guesses.length}</strong> {plural}
+          {bonusResult != null && <> · bônus {bonusResult ? '✅' : '❌'}</>}
         </p>
 
         <div className="result__actions">

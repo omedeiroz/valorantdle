@@ -3,7 +3,8 @@ import { AGENT_META, UNKNOWN } from '../data/agentMeta';
 const AGENTS_URL =
   'https://valorant-api.com/v1/agents?isPlayableCharacter=true&language=pt-BR';
 
-const CACHE_KEY = 'valorantdle:agents:v1';
+// Mude a versão sempre que o formato dos dados mudar, para invalidar o cache antigo.
+const CACHE_KEY = 'valorantdle:agents:v2';
 const CACHE_TTL = 1000 * 60 * 60 * 12; // 12h
 
 function normalizeAgent(raw) {
@@ -18,6 +19,8 @@ function normalizeAgent(raw) {
     portrait: raw.fullPortrait ?? raw.displayIcon,
     gender: meta.gender ?? UNKNOWN,
     year: meta.year ?? null,
+    ult: meta.ult ?? null,
+    pick: meta.pick ?? null,
     abilities: (raw.abilities ?? [])
       // Passivas não têm ícone na maioria dos agentes e quase ninguém as reconhece.
       .filter((a) => a.slot !== 'Passive' && a.displayIcon)
@@ -25,7 +28,8 @@ function normalizeAgent(raw) {
         id: `${raw.uuid}:${a.slot}`,
         slot: a.slot,
         name: a.displayName,
-        description: a.description,
+        // A API às vezes traz marcações como <whitebold>…</>; removemos.
+        description: (a.description ?? '').replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim(),
         icon: a.displayIcon,
       })),
   };

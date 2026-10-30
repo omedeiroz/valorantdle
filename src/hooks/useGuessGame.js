@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { load, save } from '../utils/storage';
+import { useCallback, useMemo } from 'react';
+import { useKeyedState } from './useKeyedState';
 
 /**
  * Estado de uma partida: lista de palpites (ids de agentes) e se já acertou.
@@ -9,37 +9,19 @@ import { load, save } from '../utils/storage';
  *   para quem recarregar a página não perder o progresso).
  */
 export function useGuessGame({ agents, answerId, gameKey, persist }) {
-  const initial = useCallback(() => (persist ? load(gameKey, []) : []), [gameKey, persist]);
-  const [state, setState] = useState(() => ({ key: gameKey, ids: initial() }));
-
-  // Trocou de partida: descarta os palpites anteriores já neste render.
-  let ids = state.ids;
-  if (state.key !== gameKey) {
-    ids = initial();
-    setState({ key: gameKey, ids });
-  }
-
-  useEffect(() => {
-    if (persist && state.key === gameKey) save(gameKey, state.ids);
-  }, [persist, gameKey, state]);
+  const [ids, setIds] = useKeyedState(gameKey, persist, []);
 
   const byId = useMemo(() => new Map(agents.map((a) => [a.id, a])), [agents]);
-
-  const guesses = useMemo(
-    () => ids.map((id) => byId.get(id)).filter(Boolean),
-    [ids, byId],
-  );
-
+  const guesses = useMemo(() => ids.map((id) => byId.get(id)).filter(Boolean), [ids, byId]);
   const won = answerId != null && ids.includes(answerId);
 
   const submit = useCallback(
     (agent) => {
-      setState((s) =>
-        s.ids.includes(agent.id) || s.ids.includes(answerId)
-          ? s
-          : { ...s, ids: [...s.ids, agent.id] },
+      setIds((prev) =>
+        prev.includes(agent.id) || prev.includes(answerId) ? prev : [...prev, agent.id],
       );
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [answerId],
   );
 
