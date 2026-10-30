@@ -6,7 +6,7 @@ Jogo de adivinhação de Valorant inspirado no [Loldle](https://loldle.net).
 
 ## Minigames
 
-A tela inicial reúne todos os minigames.
+A tela inicial reúne todos os minigames e mostra quantos desafios de hoje você já concluiu. O menu lateral (☰) leva a qualquer minigame de qualquer tela.
 
 - **Agente**: adivinhe o agente secreto. Cada palpite compara gênero, função, ano de lançamento, custo da ultimate e posição no ranking de pick da ranqueada dentro da função do agente (ex.: Jett é #1 entre os duelistas), com setas ▲▼ nos números.
 - **Habilidade**: adivinhe de quem é a habilidade. O ícone desvira após 3 erros e o nome aparece após 6. Depois de acertar, tem um bônus de uma chance: qual tecla é (C, Q, E ou X).

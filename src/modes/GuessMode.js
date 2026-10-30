@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useAgents } from '../context/AgentsContext';
 import { useGuessGame } from '../hooks/useGuessGame';
 import { useKeyedState } from '../hooks/useKeyedState';
 import { useVariant } from '../hooks/useVariant';
 import { pickRandom, pickSeeded, todayKey } from '../utils/daily';
+import { markDailyDone } from '../utils/progress';
 import BonusQuestion from '../components/BonusQuestion';
 import GuessList from '../components/GuessList';
 import GuessTable from '../components/GuessTable';
@@ -62,10 +63,16 @@ export default function GuessMode({
     setVariant(next);
   };
 
-  if (!item) return null;
-
   const bonusCorrect = bonus && item ? bonus.answerOf(item) : null;
   const waitingBonus = game.won && bonus && bonusPick == null;
+  const finished = game.won && !waitingBonus;
+
+  // Marca o desafio diário como concluído (aparece no menu inicial e no menu lateral).
+  useEffect(() => {
+    if (finished && persist) markDailyDone(id, day, game.attempts);
+  }, [finished, persist, id, day, game.attempts]);
+
+  if (!item) return null;
 
   return (
     <section className="mode">
@@ -92,7 +99,7 @@ export default function GuessMode({
         />
       )}
 
-      {game.won && !waitingBonus && (
+      {finished && (
         <ResultPanel
           answer={answer}
           guesses={game.guesses}

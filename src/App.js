@@ -1,7 +1,9 @@
+import { useCallback, useState } from 'react';
 import './App.css';
 import { AgentsProvider, useAgents } from './context/AgentsContext';
 import { useHashRoute } from './hooks/useHashRoute';
 import Home from './components/Home';
+import SideMenu from './components/SideMenu';
 import StatusScreen from './components/StatusScreen';
 import { PLAYABLE_MODES } from './modes/registry';
 
@@ -26,14 +28,30 @@ function GameScreen({ mode }) {
 export default function App() {
   const route = useHashRoute();
   const mode = PLAYABLE_MODES.find((m) => m.path === route);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
 
   return (
     <AgentsProvider>
       <div className="app">
         <header className="topbar">
-          <a className="brand" href="#/" aria-label="Valorantdle, menu inicial">
-            VALORANT<span>DLE</span>
-          </a>
+          <div className="topbar__left">
+            <button
+              type="button"
+              className="icon-btn burger"
+              onClick={() => setMenuOpen(true)}
+              aria-label="Abrir menu"
+              aria-expanded={menuOpen}
+            >
+              <span />
+              <span />
+              <span />
+            </button>
+            <a className="brand" href="#/" aria-label="Valorantdle, menu inicial">
+              VALORANT<span>DLE</span>
+            </a>
+          </div>
+
           <nav className="tabs" aria-label="Minigames">
             {PLAYABLE_MODES.map((m) => (
               <a
@@ -47,6 +65,8 @@ export default function App() {
             ))}
           </nav>
         </header>
+
+        <SideMenu open={menuOpen} onClose={closeMenu} currentPath={mode ? mode.path : route} />
 
         <main className={`main ${mode ? '' : 'main--wide'}`}>
           {mode ? <GameScreen mode={mode} /> : <Home />}

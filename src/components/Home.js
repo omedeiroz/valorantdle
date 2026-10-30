@@ -1,40 +1,82 @@
+import { useCountdown } from '../hooks/useCountdown';
+import { useDailyProgress } from '../hooks/useDailyProgress';
 import { MODES } from '../modes/registry';
+import ModeArt from './ModeArt';
+
+function StatusBadge({ attempts }) {
+  if (attempts == null) return <span className="badge badge--todo">Desafio de hoje</span>;
+  return (
+    <span className="badge badge--done">
+      ✓ Feito em {attempts} {attempts === 1 ? 'tentativa' : 'tentativas'}
+    </span>
+  );
+}
 
 export default function Home() {
+  const countdown = useCountdown();
+  const { progress, done, total } = useDailyProgress();
+
   return (
     <section className="home">
-      <header className="home__header">
-        <p className="home__eyebrow">Minigames de Valorant</p>
-        <h1 className="home__title">
-          Escolha seu <span>desafio</span>
-        </h1>
-        <p className="home__lead">Desafios novos todo dia à meia-noite, ou jogue rodadas sem fim no modo infinito.</p>
+      <header className="hero">
+        <div className="hero__text">
+          <p className="hero__eyebrow">Minigames de Valorant</p>
+          <h1 className="hero__title">
+            Escolha seu
+            <br />
+            <span>desafio</span>
+          </h1>
+          <p className="hero__lead">
+            Um desafio novo por dia em cada minigame, igual para todo mundo. Ou jogue sem parar no modo infinito.
+          </p>
+        </div>
+
+        <div className="hero__panel" aria-label="Progresso de hoje">
+          <p className="hero__panel-label">Hoje</p>
+          <p className="hero__panel-value">
+            {done}
+            <small>/{total}</small>
+          </p>
+          <div className="hero__bar" role="progressbar" aria-valuemin={0} aria-valuemax={total} aria-valuenow={done}>
+            {Array.from({ length: total }, (_, i) => (
+              <span key={i} className={i < done ? 'is-filled' : ''} />
+            ))}
+          </div>
+          <p className="hero__panel-foot">
+            Novos desafios em <time>{countdown}</time>
+          </p>
+        </div>
       </header>
 
-      <ul className="home__grid">
+      <ul className="cards">
         {MODES.map((m, i) => {
           const soon = !m.Component;
-          const content = (
+          const inner = (
             <>
-              <span className="game-card__glyph" aria-hidden="true">
-                {m.glyph}
-              </span>
-              <span className="game-card__index">{String(i + 1).padStart(2, '0')}</span>
-              <h2 className="game-card__title">{m.title}</h2>
-              <p className="game-card__desc">{m.description}</p>
-              <span className="game-card__cta">{soon ? 'Em breve' : 'Jogar →'}</span>
+              <div className="card__art">
+                <ModeArt type={m.art} />
+              </div>
+              <div className="card__body">
+                <div className="card__top">
+                  <span className="card__index">{String(i + 1).padStart(2, '0')}</span>
+                  {soon ? <span className="badge badge--soon">Em breve</span> : <StatusBadge attempts={progress[m.id]} />}
+                </div>
+                <h2 className="card__title">{m.title}</h2>
+                <p className="card__desc">{m.description}</p>
+                <span className="card__cta">{soon ? 'Em desenvolvimento' : 'Jogar'}</span>
+              </div>
             </>
           );
 
           return (
             <li key={m.path}>
               {soon ? (
-                <div className="game-card is-soon" aria-disabled="true">
-                  {content}
+                <div className="card is-soon" aria-disabled="true">
+                  {inner}
                 </div>
               ) : (
-                <a className="game-card" href={`#/${m.path}`}>
-                  {content}
+                <a className="card" href={`#/${m.path}`}>
+                  {inner}
                 </a>
               )}
             </li>
