@@ -50,7 +50,7 @@ export const MODES = [
     path: 'skin',
     label: 'Skin',
     title: 'Que skin é essa?',
-    description: 'Uma skin ampliada e pistas de arma, tipo, coleção e edição a cada palpite.',
+    description: 'Skins de Vandal, Phantom, Ghost, Operator, Sheriff e faca. Pistas de arma, coleção e edição a cada palpite.',
     art: 'skin',
     Component: SkinMode,
     standalone: true,
