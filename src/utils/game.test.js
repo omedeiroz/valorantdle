@@ -26,7 +26,13 @@ describe('compareAgents', () => {
   it('compara custo da ultimate e ranking de pick com setas', () => {
     const c = compareAgents(neon, jett);
     expect(c.ult).toEqual({ value: '7 pts', status: 'higher' });
-    expect(c.rolePick).toEqual({ value: '#3', status: 'lower' });
+    // Neon é #3 e a resposta (Jett) é #1: a resposta está mais acima no ranking.
+    expect(c.rolePick).toEqual({ value: '#3', status: 'higher' });
+  });
+
+  it('aponta para baixo quando a resposta está mais abaixo no ranking', () => {
+    // Palpite Jett (#1), resposta Neon (#3).
+    expect(compareAgents(jett, neon).rolePick.status).toBe('lower');
   });
 
   it('mostra agente sem ranking como "Novo"', () => {

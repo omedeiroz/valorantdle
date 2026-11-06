@@ -6,6 +6,8 @@ import { useVariant } from '../hooks/useVariant';
 import { pickRandom, pickSeeded, todayKey } from '../utils/daily';
 import { markDailyDone } from '../utils/progress';
 import BonusQuestion from '../components/BonusQuestion';
+import WordBonus from '../components/WordBonus';
+import { normalize } from '../utils/compare';
 import GuessList from '../components/GuessList';
 import GuessTable from '../components/GuessTable';
 import ResultPanel from '../components/ResultPanel';
@@ -21,11 +23,14 @@ import VariantToggle from '../components/VariantToggle';
  *  - `renderClue(item, ctx)`: a pista exibida acima da busca (opcional)
  *  - `describe(item)`: texto extra na tela de vitória (opcional)
  *  - `bonus`: pergunta extra depois de acertar (opcional)
- *      { question, options: [{ value, key, label }], answerOf(item) }
+ *      Múltipla escolha: { question, options: [{ value, key, label }], answerOf(item) }
+ *      Palavra digitada: { kind: 'text', question, maxTries, answerOf(item) }
  *  - `layout`: 'table' (compara atributos) ou 'list' (só certo/errado)
  *  - `options`: lista de respostas possíveis na busca (padrão: os agentes).
  *      Cada uma precisa de { id, name, icon }; `portrait` aparece na vitória.
  *  - `searchPlaceholder`: texto da busca
+ *  - `attributes`, `firstLabel`, `tableFooter`: colunas da tabela (padrão: as de agente)
+ *  - `help`: texto de ajuda antes do primeiro palpite (padrão: o da tabela de agentes)
  */
 export default function GuessMode({
   id,
@@ -39,6 +44,10 @@ export default function GuessMode({
   layout = 'table',
   options,
   searchPlaceholder,
+  attributes,
+  firstLabel,
+  tableFooter,
+  help,
 }) {
   const { agents: allAgents } = useAgents();
   const agents = options ?? allAgents;
@@ -70,7 +79,8 @@ export default function GuessMode({
   };
 
   const bonusCorrect = bonus && item ? bonus.answerOf(item) : null;
-  const waitingBonus = game.won && bonus && bonusPick == null;
+  const bonusState = bonusStatus(bonus, bonusPick, bonusCorrect);
+  const waitingBonus = game.won && bonus && !bonusState.done;
   const finished = game.won && !waitingBonus;
 
   // Marca o desafio diário como concluído (aparece no menu inicial e no menu lateral).
@@ -95,7 +105,17 @@ export default function GuessMode({
           gameKey,
         })}
 
-      {game.won && bonus && (
+      {game.won && bonus?.kind === 'text' && (
+        <WordBonus
+          question={bonus.question}
+          answer={bonusCorrect}
+          tries={bonusPick ?? []}
+          maxTries={bonus.maxTries}
+          onTry={(word) => setBonusPick((prev) => [...(prev ?? []), word])}
+        />
+      )}
+
+      {game.won && bonus && bonus.kind !== 'text' && (
         <BonusQuestion
           question={bonus.question}
           options={bonus.options}
@@ -112,7 +132,8 @@ export default function GuessMode({
           variant={variant}
           modeLabel={label}
           detail={describe?.(item)}
-          bonusResult={bonus ? bonusPick === bonusCorrect : undefined}
+          bonusResult={bonus ? bonusState.correct : undefined}
+          attributes={attributes}
           compactShare={layout === 'list'}
           onNext={nextRound}
           onPlayEndless={() => switchVariant('endless')}
@@ -130,18 +151,38 @@ export default function GuessMode({
       )}
 
       {layout === 'table' ? (
-        <GuessTable guesses={game.guesses} answer={answer} />
+        <GuessTable
+          guesses={game.guesses}
+          answer={answer}
+          attributes={attributes}
+          firstLabel={firstLabel}
+          footer={tableFooter}
+        />
       ) : (
         <GuessList guesses={game.guesses} answer={answer} />
       )}
 
-      {layout === 'table' && game.attempts === 0 && (
+      {game.attempts === 0 && help && <p className="mode__help">{help}</p>}
+
+      {layout === 'table' && game.attempts === 0 && !help && (
         <p className="mode__help">
           Cada palpite mostra o que bate com o agente secreto: <b className="tag tag--correct">verde</b>{' '}
-          acertou e <b className="tag tag--wrong">vermelho</b> errou. Nas colunas numéricas, a seta diz se o
-          número da resposta é maior (▲) ou menor (▼).
+          acertou e <b className="tag tag--wrong">vermelho</b> errou. Em lançamento e ultimate, a seta diz se
+          o número da resposta é maior (▲) ou menor (▼). No pick, ▲ quer dizer que a resposta está mais acima no
+          ranking da função (mais escolhida) e ▼, mais abaixo.
         </p>
       )}
     </section>
   );
+}
+
+/** Situação do bônus: já terminou? acertou? */
+function bonusStatus(bonus, pick, correct) {
+  if (!bonus) return { done: true, correct: false };
+  if (bonus.kind === 'text') {
+    const tries = pick ?? [];
+    const hit = tries.some((t) => normalize(t) === normalize(correct));
+    return { done: hit || tries.length >= bonus.maxTries, correct: hit };
+  }
+  return { done: pick != null, correct: pick === correct };
 }

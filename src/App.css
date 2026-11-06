@@ -311,7 +311,7 @@
 
 .guess-table__row {
   display: grid;
-  grid-template-columns: 72px repeat(5, 1fr);
+  grid-template-columns: 72px repeat(var(--cols, 5), 1fr);
   gap: 6px;
 }
 
@@ -1921,7 +1921,7 @@ a.drawer__link:hover {
   }
 
   .guess-table__row {
-    grid-template-columns: 56px repeat(5, 1fr);
+    grid-template-columns: 56px repeat(var(--cols, 5), 1fr);
     gap: 4px;
   }
 

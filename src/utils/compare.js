@@ -5,14 +5,25 @@
  *   'higher' | 'lower'   → atributos numéricos: o número da resposta é maior/menor
  */
 
-function compareText(a, b) {
+export function compareText(a, b) {
   return a === b ? 'correct' : 'wrong';
 }
 
-function compareNumber(guess, answer) {
+export function compareNumber(guess, answer) {
   if (guess == null || answer == null) return guess === answer && guess != null ? 'correct' : 'wrong';
   if (guess === answer) return 'correct';
   return answer > guess ? 'higher' : 'lower';
+}
+
+/**
+ * Para rankings (#1 é o topo): a seta indica posição, não o número.
+ * Resposta #4 contra palpite #1 → ▼ (a resposta está mais abaixo no ranking).
+ */
+export function compareRank(guess, answer) {
+  const status = compareNumber(guess, answer);
+  if (status === 'higher') return 'lower';
+  if (status === 'lower') return 'higher';
+  return status;
 }
 
 export const ATTRIBUTES = [
@@ -21,14 +32,15 @@ export const ATTRIBUTES = [
   { key: 'year', label: 'Lançamento', compare: compareNumber, format: (v) => v ?? '?' },
   { key: 'ult', label: 'Ultimate', compare: compareNumber, format: (v) => (v == null ? '?' : `${v} pts`) },
   // Posição no ranking de pick entre os agentes da mesma função.
-  { key: 'rolePick', label: 'Pick na função', compare: compareNumber, format: (v) => (v == null ? 'Novo' : `#${v}`) },
+  { key: 'rolePick', label: 'Pick na função', compare: compareRank, format: (v) => (v == null ? 'Novo' : `#${v}`) },
 ];
 
-export function compareAgents(guess, answer) {
+/** `attributes` permite comparar outras coisas além de agentes (ex.: skins). */
+export function compareAgents(guess, answer, attributes = ATTRIBUTES) {
   const result = {
     agent: { value: guess.name, status: guess.id === answer.id ? 'correct' : 'wrong' },
   };
-  for (const attr of ATTRIBUTES) {
+  for (const attr of attributes) {
     result[attr.key] = {
       value: attr.format(guess[attr.key]),
       status: attr.compare(guess[attr.key], answer[attr.key]),
@@ -39,8 +51,8 @@ export function compareAgents(guess, answer) {
 
 const EMOJI = { correct: '🟩', wrong: '🟥', higher: '⬆️', lower: '⬇️' };
 
-export function toEmojiRow(comparison) {
-  return ['agent', ...ATTRIBUTES.map((a) => a.key)].map((k) => EMOJI[comparison[k].status]).join('');
+export function toEmojiRow(comparison, attributes = ATTRIBUTES) {
+  return ['agent', ...attributes.map((a) => a.key)].map((k) => EMOJI[comparison[k].status]).join('');
 }
 
 /** Remove acentos e caixa para comparar nomes digitados. */
