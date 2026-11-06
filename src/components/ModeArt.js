@@ -78,6 +78,28 @@ function MapZoomArt() {
   );
 }
 
+function SkinArt() {
+  return (
+    <div className="art art--skin">
+      <svg viewBox="0 0 240 120" aria-hidden="true">
+        <path d="M20 58h28l6-8h92l6-6h40v10h22v8h-22v6h-30l-8 4h-24l-10 26h-22l6-26H84l-8 10H56l4-10H20z" />
+        <path className="art__accent" d="M96 50h44v6H96z" />
+      </svg>
+    </div>
+  );
+}
+
+function QuoteArt() {
+  return (
+    <div className="art art--quote">
+      <span className="art__mark">“</span>
+      <p>
+        Fala do <span className="art__blank">_____</span> agente
+      </p>
+    </div>
+  );
+}
+
 function MapArt() {
   return (
     <div className="art art--map">
@@ -96,5 +118,7 @@ export default function ModeArt({ type }) {
   if (type === 'ability') return <Abilities agent={agent} />;
   if (type === 'zoom') return <Zoom agent={agent} />;
   if (type === 'mapzoom') return <MapZoomArt />;
+  if (type === 'skin') return <SkinArt />;
+  if (type === 'quote') return <QuoteArt />;
   return <MapArt />;
 }

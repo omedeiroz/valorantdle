@@ -1056,6 +1056,56 @@ a.card:hover .art--mapzoom img {
   stroke-width: 2;
 }
 
+.art--skin svg {
+  width: 100%;
+  height: 100%;
+  padding: 18px 20px;
+  transform: rotate(-6deg);
+  transition: transform 0.4s ease;
+}
+
+a.card:hover .art--skin svg {
+  transform: rotate(0deg) scale(1.05);
+}
+
+.art--skin path {
+  fill: rgba(236, 232, 225, 0.08);
+  stroke: rgba(236, 232, 225, 0.45);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.art--skin .art__accent {
+  fill: var(--red);
+  stroke: none;
+}
+
+.art--quote {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 24px;
+}
+
+.art__mark {
+  font-family: var(--font-display);
+  font-size: 5rem;
+  line-height: 0.6;
+  color: var(--red);
+}
+
+.art--quote p {
+  margin: 8px 0 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: rgba(236, 232, 225, 0.7);
+}
+
+.art__blank {
+  color: var(--red);
+  letter-spacing: 0.1em;
+}
+
 /* ---------- Drawer (menu lateral) ---------- */
 
 .topbar__left {
@@ -1850,6 +1900,93 @@ a.drawer__link:hover {
   .reveal .btn {
     grid-column: 1 / -1;
   }
+}
+
+/* ---------- Complete a fala ---------- */
+
+.quote {
+  position: relative;
+  margin: 0 0 20px;
+  padding: 28px 28px 22px 64px;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--red);
+  border-radius: var(--radius);
+}
+
+.quote__mark {
+  position: absolute;
+  left: 18px;
+  top: 14px;
+  font-family: var(--font-display);
+  font-size: 4.5rem;
+  line-height: 1;
+  color: var(--red);
+}
+
+.quote__text {
+  margin: 0;
+  font-size: clamp(1.2rem, 3.4vw, 1.6rem);
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.quote__blank {
+  color: var(--red);
+  letter-spacing: 0.08em;
+}
+
+.quote__word {
+  padding: 0 4px;
+  background: rgba(24, 180, 123, 0.2);
+  border-radius: 2px;
+  color: var(--green);
+}
+
+.quote__who {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.word__hint {
+  margin: -8px 0 14px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.word__hint strong {
+  color: var(--text);
+}
+
+.word__field {
+  margin-bottom: 12px;
+}
+
+.word__tries {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.word__tries li {
+  padding: 4px 10px;
+  border-radius: 2px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.word__tries .is-correct {
+  background: var(--green);
+}
+
+.word__tries .is-wrong {
+  background: var(--wrong);
 }
 
 /* ---------- Status ---------- */

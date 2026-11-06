@@ -121,3 +121,9 @@ describe('mapa', () => {
     expect(one.every((r) => r.map.id === 'c')).toBe(true);
   });
 });
+
+describe('bônus de palavra', () => {
+  it('aceita a palavra sem acento e sem maiúsculas', () => {
+    expect(normalize('Coração')).toBe(normalize('coracao'));
+  });
+});

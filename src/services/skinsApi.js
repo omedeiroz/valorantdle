@@ -1,0 +1,106 @@
+// Skins de armas (só as da loja, que têm edição), com nomes em português.
+const BASE = 'https://valorant-api.com/v1';
+const LANG = 'language=pt-BR';
+
+// Mude a versão sempre que o formato dos dados mudar, para invalidar o cache antigo.
+const CACHE_KEY = 'valorantdle:skins:v1';
+const CACHE_TTL = 1000 * 60 * 60 * 12; // 12h
+
+// Categoria da arma (vem como "EEquippableCategory::Rifle").
+const CATEGORY = {
+  Sidearm: 'Pistola',
+  SMG: 'Submetralhadora',
+  Shotgun: 'Escopeta',
+  Rifle: 'Rifle',
+  Sniper: 'Sniper',
+  Heavy: 'Pesada',
+  Melee: 'Corpo a corpo',
+};
+
+// Ordem das edições, da mais barata para a mais cara.
+const TIER_ORDER = ['Select', 'Deluxe', 'Premium', 'Exclusive', 'Ultra'];
+
+function tierName(tier) {
+  return (tier.displayName ?? tier.devName ?? '')
+    .replace(/^Edição\s+/i, '')
+    .replace(/\s+Edition$/i, '')
+    .trim();
+}
+
+function tierRank(tier) {
+  const i = TIER_ORDER.indexOf(tier.devName);
+  return i === -1 ? tier.rank ?? 0 : i;
+}
+
+function skinImage(skin) {
+  return skin.chromas?.[0]?.fullRender ?? skin.displayIcon ?? skin.levels?.[0]?.displayIcon ?? null;
+}
+
+async function getJson(path, signal) {
+  const response = await fetch(`${BASE}/${path}?${LANG}`, { signal });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  const { data } = await response.json();
+  if (!Array.isArray(data)) throw new Error('Resposta inesperada da API');
+  return data;
+}
+
+function readCache() {
+  try {
+    const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
+    if (cached && Date.now() - cached.savedAt < CACHE_TTL) return cached.skins;
+  } catch {
+    /* cache indisponível ou corrompido: ignora */
+  }
+  return null;
+}
+
+function writeCache(skins) {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ savedAt: Date.now(), skins }));
+  } catch {
+    /* sem espaço ou modo privado: ignora */
+  }
+}
+
+export async function fetchSkins({ signal } = {}) {
+  const cached = readCache();
+  if (cached) return cached;
+
+  const [weapons, tiers, themes] = await Promise.all([
+    getJson('weapons', signal),
+    getJson('contenttiers', signal),
+    getJson('themes', signal),
+  ]);
+
+  const tierById = new Map(tiers.map((t) => [t.uuid, t]));
+  const themeById = new Map(themes.map((t) => [t.uuid, t.displayName]));
+  const seen = new Set();
+  const skins = [];
+
+  for (const weapon of weapons) {
+    const category = CATEGORY[(weapon.category ?? '').split('::').pop()] ?? 'Outra';
+    for (const skin of weapon.skins ?? []) {
+      const tier = tierById.get(skin.contentTierUuid);
+      const image = skinImage(skin);
+      // Sem edição = skin padrão ou do passe de batalha: fora do jogo.
+      if (!tier || !image || seen.has(skin.displayName)) continue;
+      seen.add(skin.displayName);
+      skins.push({
+        id: skin.uuid,
+        name: skin.displayName,
+        icon: skin.displayIcon ?? image,
+        portrait: image,
+        wideArt: true,
+        weapon: weapon.displayName,
+        category,
+        collection: themeById.get(skin.themeUuid) ?? '?',
+        tier: tierRank(tier),
+        tierName: tierName(tier),
+      });
+    }
+  }
+
+  skins.sort((a, b) => a.name.localeCompare(b.name));
+  writeCache(skins);
+  return skins;
+}

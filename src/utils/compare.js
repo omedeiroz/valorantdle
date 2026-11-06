@@ -42,7 +42,7 @@ export function compareAgents(guess, answer, attributes = ATTRIBUTES) {
   };
   for (const attr of attributes) {
     result[attr.key] = {
-      value: attr.format(guess[attr.key]),
+      value: attr.format(guess[attr.key], guess),
       status: attr.compare(guess[attr.key], answer[attr.key]),
     };
   }
